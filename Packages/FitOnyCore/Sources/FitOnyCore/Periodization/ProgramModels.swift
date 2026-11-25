@@ -32,17 +32,68 @@ public enum MesocycleWeekRole: String, Codable, Sendable, Equatable {
     }
 }
 
+public enum SlotCondition: Codable, Sendable, Equatable {
+    case required
+    case optionalBonusIfMuscleRested(muscle: MuscleGroup, minHours: Double, reason: LocalizedCopy)
+    case gatedByMuscleRecovery(muscle: MuscleGroup, minHours: Double, reason: LocalizedCopy)
+    case swapIfMuscleFatigued(
+        muscle: MuscleGroup,
+        withinHours: Double,
+        swapExerciseID: UUID,
+        swapScheme: SetScheme,
+        swapRestSeconds: Int,
+        swapRIR: Int,
+        reason: LocalizedCopy
+    )
+    case biWeeklyChoice(
+        suggestedIntervalDays: Int,
+        alternativeExerciseID: UUID,
+        alternativeScheme: SetScheme,
+        alternativeWarmup: WarmupPrescription,
+        alternativeRestSeconds: Int,
+        alternativeRIR: Int,
+        reason: LocalizedCopy
+    )
+    case catchUpIfMuscleUnderVolume(muscle: MuscleGroup, reason: LocalizedCopy)
+}
+
 public struct ModuleExerciseSlot: Codable, Sendable, Equatable, Identifiable {
     public var id: UUID
     public var exerciseID: UUID
     public var scheme: SetScheme
+    public var maxWorkingSetsInAccumulation: Int?
+    public var warmup: WarmupPrescription
     public var targetRIR: Int
+    public var minRestSeconds: Int
+    public var maxRestSeconds: Int
+    public var tempo: TempoPrescription
+    public var condition: SlotCondition
+    public var slotNote: BilingualText?
 
-    public init(id: UUID = UUID(), exerciseID: UUID, scheme: SetScheme, targetRIR: Int) {
+    public init(
+        id: UUID = UUID(),
+        exerciseID: UUID,
+        scheme: SetScheme,
+        maxWorkingSetsInAccumulation: Int? = nil,
+        warmup: WarmupPrescription = .none,
+        targetRIR: Int,
+        minRestSeconds: Int,
+        maxRestSeconds: Int? = nil,
+        tempo: TempoPrescription = .controlledHypertrophy,
+        condition: SlotCondition = .required,
+        slotNote: BilingualText? = nil
+    ) {
         self.id = id
         self.exerciseID = exerciseID
         self.scheme = scheme
+        self.maxWorkingSetsInAccumulation = maxWorkingSetsInAccumulation
+        self.warmup = warmup
         self.targetRIR = targetRIR
+        self.minRestSeconds = minRestSeconds
+        self.maxRestSeconds = maxRestSeconds ?? minRestSeconds
+        self.tempo = tempo
+        self.condition = condition
+        self.slotNote = slotNote
     }
 }
 
