@@ -1,0 +1,116 @@
+name: FitOny
+options:
+  bundleIdPrefix: com.deusflow.fitony
+  deploymentTarget:
+    iOS: "18.0"
+    watchOS: "11.0"
+  xcodeVersion: "16.0"
+  generateEmptyDirectories: true
+
+packages:
+  FitOnyCore:
+    path: Packages/FitOnyCore
+
+settings:
+  base:
+    SWIFT_VERSION: "6.0"
+    SWIFT_STRICT_CONCURRENCY: complete
+
+targets:
+  FitOny-iOS:
+    type: application
+    platform: iOS
+    sources:
+      - path: App-iOS
+        excludes:
+          - "**/Info.plist"
+          - "**/*.entitlements"
+    info:
+      path: App-iOS/App/Info.plist
+      properties:
+        UILaunchScreen: {}
+        NSHealthShareUsageDescription: "FitOny читает сон, пульс покоя, вариабельность ритма, температуру запястья и артериальное давление для расчёта восстановления."
+        NSHealthUpdateUsageDescription: "FitOny сохраняет выполненные силовые тренировки и замеры давления в Apple Здоровье."
+        NSFaceIDUsageDescription: "Face ID защищает доступ к закрытому разделу Advanced Mode."
+    entitlements:
+      path: App-iOS/FitOny-iOS.entitlements
+      properties:
+        com.apple.developer.healthkit: true
+        com.apple.developer.healthkit.access: []
+    dependencies:
+      - package: FitOnyCore
+        product: FitOnyCore
+      - target: FitOny-Watch
+        embed: true
+
+  FitOny-Watch:
+    type: application
+    platform: watchOS
+    sources:
+      - path: App-Watch
+        excludes:
+          - "**/Info.plist"
+          - "**/*.entitlements"
+    info:
+      path: App-Watch/App/Info.plist
+      properties:
+        WKApplication: true
+        WKCompanionAppBundleIdentifier: com.deusflow.fitony.ios
+        NSHealthShareUsageDescription: "Часы отслеживают пульс во время подхода и пауз отдыха."
+        NSHealthUpdateUsageDescription: "Часы записывают силовую тренировку и расход энергии в Здоровье."
+        NSMotionUsageDescription: "Датчики движения используются для подсчёта повторений и оценки замедления в конце подхода."
+        WKBackgroundModes:
+          - workout-processing
+    entitlements:
+      path: App-Watch/FitOny-Watch.entitlements
+      properties:
+        com.apple.developer.healthkit: true
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.deusflow.fitony.ios.watchkitapp
+    dependencies:
+      - package: FitOnyCore
+        product: FitOnyCore
+
+  FitOny-PhoneLiveActivity:
+    type: app-extension
+    platform: iOS
+    sources:
+      - path: Widgets/PhoneLiveActivity
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.deusflow.fitony.ios.liveactivity
+    dependencies:
+      - package: FitOnyCore
+        product: FitOnyCore
+
+  FitOny-WatchComplications:
+    type: app-extension
+    platform: watchOS
+    sources:
+      - path: Widgets/WatchComplications
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.deusflow.fitony.ios.watchkitapp.widgets
+    dependencies:
+      - package: FitOnyCore
+        product: FitOnyCore
+
+schemes:
+  FitOny-FreeSigning:
+    build:
+      targets:
+        FitOny-iOS: all
+        FitOny-Watch: all
+    run:
+      config: Debug
+
+  FitOny-Full:
+    build:
+      targets:
+        FitOny-iOS: all
+        FitOny-Watch: all
+        FitOny-PhoneLiveActivity: all
+        FitOny-WatchComplications: all
+    run:
+      config: Debug

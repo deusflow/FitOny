@@ -1,0 +1,67 @@
+import Foundation
+
+/// Поведение датчика движения запястья для конкретного упражнения.
+public enum MotionTrackingProfile: String, Codable, Sendable, Equatable {
+    case verticalBarPath      // Жимы лёжа/стоя, присед со штангой
+    case arcWristPath         // Сгибания рук, махи, вертикальные и горизонтальные тяги
+    case unilateral           // Одноручные движения (зависит от руки с часами)
+    case stationaryWrist      // Жим ногами, сгибания/разгибания ног, икры — автоподсчёт отключён
+
+    public var supportsWristSensor: Bool {
+        self != .stationaryWrist
+    }
+}
+
+public struct SetupNote: Codable, Sendable, Equatable {
+    public var seatPosition: String?
+    public var backrestAngle: String?
+    public var useStraps: Bool
+    public var cueText: String
+
+    public init(
+        seatPosition: String? = nil,
+        backrestAngle: String? = nil,
+        useStraps: Bool = false,
+        cueText: String = ""
+    ) {
+        self.seatPosition = seatPosition
+        self.backrestAngle = backrestAngle
+        self.useStraps = useStraps
+        self.cueText = cueText
+    }
+}
+
+public struct ExerciseDefinition: Codable, Sendable, Equatable, Identifiable {
+    public var id: UUID
+    public var code: String
+    public var name: String
+    public var isCompound: Bool
+    public var equipment: EquipmentProfile
+    public var motionProfile: MotionTrackingProfile
+    /// Дробный вклад одного рабочего подхода по мышечным группам (например, Chest: 1.0, Triceps: 0.5).
+    public var muscleContributions: [MuscleGroup: Double]
+    public var defaultRestSeconds: Int
+    public var setupNote: SetupNote
+
+    public init(
+        id: UUID = UUID(),
+        code: String,
+        name: String,
+        isCompound: Bool,
+        equipment: EquipmentProfile,
+        motionProfile: MotionTrackingProfile,
+        muscleContributions: [MuscleGroup: Double],
+        defaultRestSeconds: Int,
+        setupNote: SetupNote = SetupNote()
+    ) {
+        self.id = id
+        self.code = code
+        self.name = name
+        self.isCompound = isCompound
+        self.equipment = equipment
+        self.motionProfile = motionProfile
+        self.muscleContributions = muscleContributions
+        self.defaultRestSeconds = defaultRestSeconds
+        self.setupNote = setupNote
+    }
+}
