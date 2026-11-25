@@ -86,6 +86,29 @@ struct FitOnyCoreVerify {
         let platesMax20 = PlateCalculator.platesPerSide(totalWeightKg: 87.5, availablePlatesKg: [20, 15, 10, 5, 2.5, 1.25])
         precondition(platesMax20.platesPerSideKg == [20, 10, 2.5, 1.25])
 
-        print("FitOnyCoreVerify OK: программа «\(program.name.resolved(for: .da)) / \(program.name.resolved(for: .ru))» (5 модулей, \(PumpetPonyCatalog.exercises.count) упр.), трицепс=\(tricepsTotal), бицепс=\(bicepsTotal) дробн. сетов; движок разминки, прогрессии, авторегуляции и блинов проверен.")
+        // День 3: Симуляция 6-недельного мезоцикла Hypertrophy для Модуля D и Модуля A
+        let dWeek1 = PeriodizationEngine.prescribeModule(PumpetPonyCatalog.moduleD, weekNumber: 1, totalWeeks: 6, phase: .hypertrophy)
+        let dWeek3 = PeriodizationEngine.prescribeModule(PumpetPonyCatalog.moduleD, weekNumber: 3, totalWeeks: 6, phase: .hypertrophy)
+        let dWeek6 = PeriodizationEngine.prescribeModule(PumpetPonyCatalog.moduleD, weekNumber: 6, totalWeeks: 6, phase: .hypertrophy)
+        precondition(dWeek1.role == .acclimation && dWeek1.slots[5].workingSetCount == 3 && dWeek1.slots[5].targetRIR == 2)
+        precondition(dWeek3.role == .accumulation && dWeek3.slots[5].workingSetCount == 4 && dWeek3.slots[5].targetRIR == 1)
+        precondition(dWeek6.role == .deload && dWeek6.slots[0].workingSetCount == 2 && dWeek6.slots[0].weightScaleFactor == 1.0 && dWeek6.slots[0].targetRIR == 3)
+
+        let aWeek6 = PeriodizationEngine.prescribeModule(PumpetPonyCatalog.moduleA, weekNumber: 6, totalWeeks: 6, phase: .hypertrophy)
+        precondition(aWeek6.slots[0].workingSetCount == 3) // 5 подходов обратной пирамиды -> 3 подхода в Deload
+
+        // Проверка детектора плато
+        let inclineEx = PumpetPonyCatalog.exerciseByID[PumpetPonyCatalog.ExerciseIDs.inclineChestPress]!
+        let plateau = PlateauDetector.evaluate(
+            exercise: inclineEx,
+            weeklyHistory: [
+                WeeklyExercisePerformance(weekNumber: 2, bestE1RMKg: 115.0, averageReadinessScore: 76),
+                WeeklyExercisePerformance(weekNumber: 3, bestE1RMKg: 115.4, averageReadinessScore: 80),
+                WeeklyExercisePerformance(weekNumber: 4, bestE1RMKg: 115.1, averageReadinessScore: 74)
+            ]
+        )
+        precondition(plateau != nil)
+
+        print("FitOnyCoreVerify OK: «\(program.name.resolved(for: .da)) / \(program.name.resolved(for: .ru))» (5 модулей, \(PumpetPonyCatalog.exercises.count) упр.), трицепс=\(tricepsTotal), бицепс=\(bicepsTotal); 6-нед. мезоцикл (W1->W3->W6 Deload) и PlateauDetector проверены.")
     }
 }
