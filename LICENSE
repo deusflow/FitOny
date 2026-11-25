@@ -1,0 +1,36 @@
+PROPRIETARY SOURCE-AVAILABLE LICENSE
+Copyright (c) 2026 deusflow. All Rights Reserved.
+
+1. PURPOSE (PORTFOLIO & TECHNICAL EVALUATION ONLY)
+This repository and its source code are made publicly visible solely for
+portfolio demonstration, architectural review, and technical evaluation by
+prospective employers, clients, and peers.
+
+2. LIMITED VIEWING GRANT
+Permission is granted, free of charge, to read and inspect the source code on
+GitHub and to clone and compile it locally strictly for temporary, personal,
+non-commercial evaluation of the author's engineering work.
+
+3. RESTRICTIONS (NO COPYING, REDISTRIBUTION, OR DERIVATIVE WORKS)
+Except for the limited viewing grant in Section 2, NO license or right is
+granted under any copyright, patent, trade secret, or trademark. Without prior
+written permission from the copyright holder, you may NOT:
+  a) copy, reproduce, publish, mirror, or redistribute any substantial portion
+     of the source code, training algorithms, or program templates;
+  b) modify, adapt, translate, or create derivative works based on this project;
+  c) distribute, sell, sublicense, host, or submit any application, binary, or
+     service containing code or assets from this repository to the Apple App
+     Store, Google Play, TestFlight, or any other distribution channel;
+  d) use the codebase or documentation for commercial products or commercial
+     consulting.
+
+4. BRAND, ARTWORK & TRADEMARKS
+The "FitOny" and "GYM FITONY APP" names, the "Pumpet Pony" program name, visual
+designs, and all mascot artwork/illustrations in this repository are proprietary
+intellectual property of the author. All rights in artwork and branding are
+expressly reserved.
+
+5. NO WARRANTY
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE, AND NONINFRINGEMENT.
