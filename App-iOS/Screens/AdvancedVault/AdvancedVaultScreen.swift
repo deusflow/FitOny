@@ -2,14 +2,21 @@ import SwiftUI
 import FitOnyCore
 
 struct AdvancedVaultScreen: View {
+    @Environment(LanguageState.self) private var language
+
     var body: some View {
         NavigationStack {
             ContentUnavailableView(
-                "Закрытый раздел",
+                language.text(FitOnyCopy.advancedTitle),
                 systemImage: "lock.shield.fill",
-                description: Text("Защищено Face ID и шифрованием AES-GCM: профиль, АД и биомаркеры")
+                description: Text(language.text(FitOnyCopy.advancedSubtitle))
             )
-            .navigationTitle("Advanced")
+            .navigationTitle(language.text(FitOnyCopy.tabAdvanced))
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    LanguageQuickSwitchButton()
+                }
+            }
         }
     }
 }

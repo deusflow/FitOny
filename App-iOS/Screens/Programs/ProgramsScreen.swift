@@ -2,14 +2,21 @@ import SwiftUI
 import FitOnyCore
 
 struct ProgramsScreen: View {
+    @Environment(LanguageState.self) private var language
+
     var body: some View {
         NavigationStack {
             ContentUnavailableView(
-                "Программы и циклы",
+                language.text(FitOnyCopy.programsTitle),
                 systemImage: "calendar",
-                description: Text("Макроцикл, 6-недельный мезоцикл и модули тренировок")
+                description: Text(language.text(FitOnyCopy.programsSubtitle))
             )
-            .navigationTitle("Циклы")
+            .navigationTitle(language.text(FitOnyCopy.tabCycles))
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    LanguageQuickSwitchButton()
+                }
+            }
         }
     }
 }

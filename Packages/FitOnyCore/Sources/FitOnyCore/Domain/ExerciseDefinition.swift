@@ -16,13 +16,13 @@ public struct SetupNote: Codable, Sendable, Equatable {
     public var seatPosition: String?
     public var backrestAngle: String?
     public var useStraps: Bool
-    public var cueText: String
+    public var cueText: BilingualText
 
     public init(
         seatPosition: String? = nil,
         backrestAngle: String? = nil,
         useStraps: Bool = false,
-        cueText: String = ""
+        cueText: BilingualText = .custom("")
     ) {
         self.seatPosition = seatPosition
         self.backrestAngle = backrestAngle
@@ -34,7 +34,7 @@ public struct SetupNote: Codable, Sendable, Equatable {
 public struct ExerciseDefinition: Codable, Sendable, Equatable, Identifiable {
     public var id: UUID
     public var code: String
-    public var name: String
+    public var name: BilingualText
     public var isCompound: Bool
     public var equipment: EquipmentProfile
     public var motionProfile: MotionTrackingProfile
@@ -46,7 +46,7 @@ public struct ExerciseDefinition: Codable, Sendable, Equatable, Identifiable {
     public init(
         id: UUID = UUID(),
         code: String,
-        name: String,
+        name: BilingualText,
         isCompound: Bool,
         equipment: EquipmentProfile,
         motionProfile: MotionTrackingProfile,

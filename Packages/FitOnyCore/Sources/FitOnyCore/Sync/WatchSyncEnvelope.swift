@@ -9,6 +9,7 @@ public struct WatchSyncEnvelope: Codable, Sendable, Equatable, Identifiable {
         case restTimerAdjusted(sessionID: UUID, remainingSeconds: Int)
         case sessionFinished(sessionID: UUID, finishedAt: Date)
         case morningCheckInSubmitted(MorningCheckIn)
+        case languageChanged(AppLanguage)
     }
 
     public var id: UUID

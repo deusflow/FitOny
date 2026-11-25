@@ -2,14 +2,21 @@ import SwiftUI
 import FitOnyCore
 
 struct TodayScreen: View {
+    @Environment(LanguageState.self) private var language
+
     var body: some View {
         NavigationStack {
             ContentUnavailableView(
-                "Сегодняшний модуль",
+                language.text(FitOnyCopy.todayModuleTitle),
                 systemImage: "dumbbell.fill",
-                description: Text("Готовность, утренний чек-ин и старт тренировки")
+                description: Text(language.text(FitOnyCopy.todayModuleSubtitle))
             )
-            .navigationTitle("FitOny")
+            .navigationTitle(language.text(FitOnyCopy.appName))
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    LanguageQuickSwitchButton()
+                }
+            }
         }
     }
 }

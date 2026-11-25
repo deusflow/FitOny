@@ -24,23 +24,27 @@ public enum MuscleGroup: String, Codable, Sendable, CaseIterable, Hashable {
     case spinalErectors
     case abs
 
-    public var displayNameRu: String {
+    public var localizedName: LocalizedCopy {
         switch self {
-        case .chest: "Грудь"
-        case .lats: "Широчайшие"
-        case .upperBack: "Верх спины и трапеции"
-        case .frontDelt: "Передняя дельта"
-        case .sideDelt: "Средняя дельта"
-        case .rearDelt: "Задняя дельта"
-        case .biceps: "Бицепс"
-        case .triceps: "Трицепс"
-        case .quads: "Квадрицепс"
-        case .hamstrings: "Бицепс бедра"
-        case .glutes: "Ягодичные"
-        case .calves: "Икроножные"
-        case .spinalErectors: "Разгибатели спины"
-        case .abs: "Пресс"
+        case .chest: LocalizedCopy(da: "Bryst", ru: "Грудь")
+        case .lats: LocalizedCopy(da: "Bred ryg (Lats)", ru: "Широчайшие")
+        case .upperBack: LocalizedCopy(da: "Øvre ryg & nakke", ru: "Верх спины и трапеции")
+        case .frontDelt: LocalizedCopy(da: "Forreste skulder", ru: "Передняя дельта")
+        case .sideDelt: LocalizedCopy(da: "Midterste skulder", ru: "Средняя дельта")
+        case .rearDelt: LocalizedCopy(da: "Bageste skulder", ru: "Задняя дельта")
+        case .biceps: LocalizedCopy(da: "Biceps", ru: "Бицепс")
+        case .triceps: LocalizedCopy(da: "Triceps", ru: "Трицепс")
+        case .quads: LocalizedCopy(da: "Forlår (Quads)", ru: "Квадрицепс")
+        case .hamstrings: LocalizedCopy(da: "Baglår", ru: "Бицепс бедра")
+        case .glutes: LocalizedCopy(da: "Baller (Glutes)", ru: "Ягодичные")
+        case .calves: LocalizedCopy(da: "Lægge", ru: "Икроножные")
+        case .spinalErectors: LocalizedCopy(da: "Lænd", ru: "Разгибатели спины")
+        case .abs: LocalizedCopy(da: "Mave", ru: "Пресс")
         }
+    }
+
+    public func displayName(for language: AppLanguage) -> String {
+        localizedName.value(for: language)
     }
 
     public var vector: MovementVector {

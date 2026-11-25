@@ -12,12 +12,20 @@ struct WorkoutLiveActivityBundle: WidgetBundle {
 struct EmptyWorkoutWidget: Widget {
     let kind = "com.deusflow.fitony.liveactivity.placeholder"
 
+    private var currentLanguage: AppLanguage {
+        if let saved = UserDefaults.standard.string(forKey: "fitony.primaryLanguage"),
+           let parsed = AppLanguage(rawValue: saved) {
+            return parsed
+        }
+        return .da
+    }
+
     var body: some WidgetConfiguration {
         StaticConfiguration(kind: kind, provider: PlaceholderTimelineProvider()) { _ in
-            Text("FitOny")
+            Text(FitOnyCopy.appName.value(for: currentLanguage))
         }
-        .configurationDisplayName("Активная тренировка")
-        .description("Таймер отдыха и следующий подход на заблокированном экране.")
+        .configurationDisplayName(FitOnyCopy.widgetLiveActivityTitle.value(for: currentLanguage))
+        .description(FitOnyCopy.widgetLiveActivityDescription.value(for: currentLanguage))
     }
 }
 

@@ -12,13 +12,21 @@ struct ReadinessComplicationBundle: WidgetBundle {
 struct ReadinessComplicationWidget: Widget {
     let kind = "com.deusflow.fitony.watch.readiness"
 
+    private var currentLanguage: AppLanguage {
+        if let saved = UserDefaults.standard.string(forKey: "fitony.watch.primaryLanguage"),
+           let parsed = AppLanguage(rawValue: saved) {
+            return parsed
+        }
+        return .da
+    }
+
     var body: some WidgetConfiguration {
         StaticConfiguration(kind: kind, provider: WatchReadinessProvider()) { entry in
             Text("\(entry.score)")
                 .font(.system(.headline, design: .rounded).monospacedDigit())
         }
-        .configurationDisplayName("Готовность")
-        .description("Индекс восстановления на циферблате Apple Watch.")
+        .configurationDisplayName(FitOnyCopy.widgetReadinessTitle.value(for: currentLanguage))
+        .description(FitOnyCopy.widgetReadinessDescription.value(for: currentLanguage))
     }
 }
 

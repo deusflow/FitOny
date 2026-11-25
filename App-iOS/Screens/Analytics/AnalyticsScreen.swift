@@ -2,14 +2,21 @@ import SwiftUI
 import FitOnyCore
 
 struct AnalyticsScreen: View {
+    @Environment(LanguageState.self) private var language
+
     var body: some View {
         NavigationStack {
             ContentUnavailableView(
-                "Объём и прогрессия силы",
+                language.text(FitOnyCopy.analyticsTitle),
                 systemImage: "chart.xyaxis.line",
-                description: Text("Зоны MEV / MAV / MRV по 14 мышцам и кривые e1RM")
+                description: Text(language.text(FitOnyCopy.analyticsSubtitle))
             )
-            .navigationTitle("Аналитика")
+            .navigationTitle(language.text(FitOnyCopy.tabVolume))
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    LanguageQuickSwitchButton()
+                }
+            }
         }
     }
 }

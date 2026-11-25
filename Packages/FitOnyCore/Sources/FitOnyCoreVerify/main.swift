@@ -7,6 +7,16 @@ struct FitOnyCoreVerify {
         let muscles = MuscleGroup.allCases
         precondition(muscles.count == 14, "Ожидалось 14 мышечных групп")
 
+        precondition(MuscleGroup.chest.displayName(for: .da) == "Bryst")
+        precondition(MuscleGroup.chest.displayName(for: .ru) == "Грудь")
+        precondition(AppLanguage.da.toggled() == .ru && AppLanguage.ru.toggled() == .da)
+
+        let exerciseName = BilingualText(da: "Skrå bænkpres", ru: "Жим на наклонной")
+        precondition(exerciseName.resolved(for: .da) == "Skrå bænkpres")
+        precondition(exerciseName.resolved(for: .ru) == "Жим на наклонной")
+        precondition(exerciseName.secondaryRussianHint(for: .da) == "Жим на наклонной")
+        precondition(exerciseName.secondaryRussianHint(for: .ru) == nil)
+
         let dumbbell = EquipmentProfile.dumbbellRack()
         let roundedDumbbell = dumbbell.roundToAvailable(23.2)
         let nextDumbbell = dumbbell.nextStepUp(from: 22.0)
@@ -25,6 +35,6 @@ struct FitOnyCoreVerify {
         let loadState = ExerciseLoadState(exerciseID: UUID(), baselineWorkingWeightKg: 100.0, sessionTargetWeightKg: 90.0)
         precondition(loadState.baselineWorkingWeightKg == 100.0 && loadState.sessionTargetWeightKg == 90.0)
 
-        print("FitOnyCoreVerify OK: \(muscles.count) мышечных групп, округление весов, профили восстановления и контракты синхронизации проверены.")
+        print("FitOnyCoreVerify OK: 14 мышечных групп (DA/RU), мгновенное переключение языка, округление весов и контракты синхронизации проверены.")
     }
 }

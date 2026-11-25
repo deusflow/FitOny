@@ -20,14 +20,14 @@ public struct ReadinessSnapshot: Codable, Sendable, Equatable {
     public var score: Int            // 0..100
     public var hasCompleteNightSensors: Bool
     public var isSuspectedIllness: Bool
-    public var advisoryNote: String?
+    public var advisoryNote: LocalizedCopy?
 
     public init(
         date: Date = .now,
         score: Int,
         hasCompleteNightSensors: Bool,
         isSuspectedIllness: Bool = false,
-        advisoryNote: String? = nil
+        advisoryNote: LocalizedCopy? = nil
     ) {
         self.date = date
         self.score = min(100, max(0, score))

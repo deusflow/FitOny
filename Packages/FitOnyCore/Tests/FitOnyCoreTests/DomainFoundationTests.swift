@@ -5,9 +5,12 @@ import Testing
 
 @Suite("Domain Foundation Tests")
 struct DomainFoundationTests {
-    @Test("14 muscle groups and recovery windows")
+    @Test("14 muscle groups, bilingual DA/RU names, and recovery windows")
     func muscleCatalogAndProfiles() {
         #expect(MuscleGroup.allCases.count == 14)
+        #expect(MuscleGroup.chest.displayName(for: .da) == "Bryst")
+        #expect(MuscleGroup.chest.displayName(for: .ru) == "Грудь")
+        #expect(AppLanguage.da.toggled() == .ru)
         #expect(PhysiologicalProfile.natural.directMuscleRecoveryHours == 48.0)
         #expect(PhysiologicalProfile.enhanced.directMuscleRecoveryHours == 36.0)
     }
