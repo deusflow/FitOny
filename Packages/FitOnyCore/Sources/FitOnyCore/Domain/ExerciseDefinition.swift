@@ -37,6 +37,7 @@ public struct ExerciseDefinition: Codable, Sendable, Equatable, Identifiable {
     public var name: BilingualText
     public var isCompound: Bool
     public var equipment: EquipmentProfile
+    public var alternativeEquipment: EquipmentProfile?
     public var motionProfile: MotionTrackingProfile
     /// Дробный вклад одного рабочего подхода по мышечным группам (например, Chest: 1.0, Triceps: 0.5).
     public var muscleContributions: [MuscleGroup: Double]
@@ -49,6 +50,7 @@ public struct ExerciseDefinition: Codable, Sendable, Equatable, Identifiable {
         name: BilingualText,
         isCompound: Bool,
         equipment: EquipmentProfile,
+        alternativeEquipment: EquipmentProfile? = nil,
         motionProfile: MotionTrackingProfile,
         muscleContributions: [MuscleGroup: Double],
         defaultRestSeconds: Int,
@@ -59,6 +61,7 @@ public struct ExerciseDefinition: Codable, Sendable, Equatable, Identifiable {
         self.name = name
         self.isCompound = isCompound
         self.equipment = equipment
+        self.alternativeEquipment = alternativeEquipment
         self.motionProfile = motionProfile
         self.muscleContributions = muscleContributions
         self.defaultRestSeconds = defaultRestSeconds

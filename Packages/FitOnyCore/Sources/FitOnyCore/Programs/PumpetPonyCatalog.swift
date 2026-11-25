@@ -53,6 +53,7 @@ public enum PumpetPonyCatalog {
             ),
             isCompound: true,
             equipment: .machine(stepKg: 2.5),
+            alternativeEquipment: .dumbbellRack(),
             motionProfile: .verticalBarPath,
             muscleContributions: [.chest: 1.0, .frontDelt: 0.5, .triceps: 0.5],
             defaultRestSeconds: 180,
@@ -73,6 +74,7 @@ public enum PumpetPonyCatalog {
             ),
             isCompound: true,
             equipment: .machine(stepKg: 2.5),
+            alternativeEquipment: .dumbbellRack(),
             motionProfile: .verticalBarPath,
             muscleContributions: [.chest: 1.0, .frontDelt: 0.5, .triceps: 0.5],
             defaultRestSeconds: 135
@@ -101,7 +103,13 @@ public enum PumpetPonyCatalog {
             equipment: .cableStack(stepKg: 2.5, microPinKg: 1.25),
             motionProfile: .unilateral,
             muscleContributions: [.sideDelt: 1.0],
-            defaultRestSeconds: 65
+            defaultRestSeconds: 65,
+            setupNote: SetupNote(
+                cueText: BilingualText(
+                    da: "Indstil trissen i håndledshøjde.",
+                    ru: "Блок на уровне кисти."
+                )
+            )
         ),
         ExerciseDefinition(
             id: ExerciseIDs.bayesianCableCurl,
@@ -125,6 +133,7 @@ public enum PumpetPonyCatalog {
             ),
             isCompound: true,
             equipment: .machine(stepKg: 2.5),
+            alternativeEquipment: .barbell(barWeightKg: 20.0, stepKg: 2.5),
             motionProfile: .arcWristPath,
             muscleContributions: [.upperBack: 1.0, .lats: 0.5, .rearDelt: 0.5, .biceps: 0.5],
             defaultRestSeconds: 165,
@@ -206,6 +215,7 @@ public enum PumpetPonyCatalog {
             ),
             isCompound: false,
             equipment: .barbell(barWeightKg: 10.0, stepKg: 2.5),
+            alternativeEquipment: .dumbbellRack(),
             motionProfile: .arcWristPath,
             muscleContributions: [.biceps: 1.0],
             defaultRestSeconds: 120
@@ -219,6 +229,7 @@ public enum PumpetPonyCatalog {
             ),
             isCompound: false,
             equipment: .dumbbellRack(),
+            alternativeEquipment: .cableStack(stepKg: 2.5, microPinKg: 1.25),
             motionProfile: .arcWristPath,
             muscleContributions: [.biceps: 1.0],
             defaultRestSeconds: 90
@@ -258,6 +269,7 @@ public enum PumpetPonyCatalog {
             ),
             isCompound: true,
             equipment: .machine(stepKg: 2.5),
+            alternativeEquipment: .dumbbellRack(),
             motionProfile: .verticalBarPath,
             muscleContributions: [.frontDelt: 1.0, .sideDelt: 0.5, .triceps: 0.5],
             defaultRestSeconds: 120,
@@ -472,7 +484,7 @@ public enum PumpetPonyCatalog {
                 warmup: .single12(),
                 targetRIR: 0,
                 minRestSeconds: 90,
-                condition: .optionalIfMuscleRested(
+                condition: .optionalBonusIfMuscleRested(
                     muscle: .biceps,
                     minHours: 48,
                     reason: LocalizedCopy(
@@ -673,10 +685,11 @@ public enum PumpetPonyCatalog {
             ModuleExerciseSlot(
                 exerciseID: ExerciseIDs.wideNeutralPulldownOrPullups,
                 scheme: .straightSets(count: 3, reps: RepRange(min: 8, max: 10)),
+                maxWorkingSetsInAccumulation: 4,
                 warmup: .single12(),
                 targetRIR: 1,
                 minRestSeconds: 120,
-                condition: .optionalIfMuscleRested(
+                condition: .gatedByMuscleRecovery(
                     muscle: .lats,
                     minHours: 48,
                     reason: LocalizedCopy(

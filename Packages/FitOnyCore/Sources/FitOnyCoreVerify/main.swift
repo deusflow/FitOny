@@ -23,7 +23,7 @@ struct FitOnyCoreVerify {
         var fractionalSets: [MuscleGroup: Double] = [:]
         for module in baseModules {
             for slot in module.slots {
-                if case .optionalIfMuscleRested = slot.condition { continue }
+                if case .optionalBonusIfMuscleRested = slot.condition { continue }
                 guard let ex = PumpetPonyCatalog.exerciseByID[slot.exerciseID] else { continue }
                 let sets = Double(slot.scheme.workingSetCount)
                 for (muscle, coeff) in ex.muscleContributions {

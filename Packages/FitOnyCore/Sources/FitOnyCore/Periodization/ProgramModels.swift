@@ -34,7 +34,8 @@ public enum MesocycleWeekRole: String, Codable, Sendable, Equatable {
 
 public enum SlotCondition: Codable, Sendable, Equatable {
     case required
-    case optionalIfMuscleRested(muscle: MuscleGroup, minHours: Double, reason: LocalizedCopy)
+    case optionalBonusIfMuscleRested(muscle: MuscleGroup, minHours: Double, reason: LocalizedCopy)
+    case gatedByMuscleRecovery(muscle: MuscleGroup, minHours: Double, reason: LocalizedCopy)
     case swapIfMuscleFatigued(
         muscle: MuscleGroup,
         withinHours: Double,
@@ -60,6 +61,7 @@ public struct ModuleExerciseSlot: Codable, Sendable, Equatable, Identifiable {
     public var id: UUID
     public var exerciseID: UUID
     public var scheme: SetScheme
+    public var maxWorkingSetsInAccumulation: Int?
     public var warmup: WarmupPrescription
     public var targetRIR: Int
     public var minRestSeconds: Int
@@ -72,6 +74,7 @@ public struct ModuleExerciseSlot: Codable, Sendable, Equatable, Identifiable {
         id: UUID = UUID(),
         exerciseID: UUID,
         scheme: SetScheme,
+        maxWorkingSetsInAccumulation: Int? = nil,
         warmup: WarmupPrescription = .none,
         targetRIR: Int,
         minRestSeconds: Int,
@@ -83,6 +86,7 @@ public struct ModuleExerciseSlot: Codable, Sendable, Equatable, Identifiable {
         self.id = id
         self.exerciseID = exerciseID
         self.scheme = scheme
+        self.maxWorkingSetsInAccumulation = maxWorkingSetsInAccumulation
         self.warmup = warmup
         self.targetRIR = targetRIR
         self.minRestSeconds = minRestSeconds
