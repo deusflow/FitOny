@@ -29,7 +29,8 @@ public enum ProgressionEngine {
         targetRIR: Int,
         equipment: EquipmentProfile,
         phase: MacrocyclePhase = .hypertrophy,
-        isDeloadWeek: Bool = false
+        isDeloadWeek: Bool = false,
+        previousQualifyingStreak: Int = 0
     ) -> ProgressionDecision {
         let baseline = currentLoad.baselineWorkingWeightKg
 
@@ -45,7 +46,9 @@ public enum ProgressionEngine {
             )
         }
 
-        let workingSets = completedWorkingSets.filter { !$0.isWarmup }.sorted { $0.setIndex < $1.setIndex }
+        let workingSets = completedWorkingSets
+            .filter { !$0.isWarmup && !$0.isDropStep }
+            .sorted { $0.setIndex < $1.setIndex }
         let requiredCount = scheme.workingSetCount
 
         guard workingSets.count >= requiredCount, requiredCount > 0 else {
@@ -62,12 +65,32 @@ public enum ProgressionEngine {
 
         let allHitTopRepsAndRIR = workingSets.prefix(requiredCount).enumerated().allSatisfy { index, set in
             let range = scheme.repRange(forWorkingSetIndex: index)
-            return set.weightKg >= baseline - 0.001 &&
+            let expectedSetWeight = targetWeightForSet(
+                sessionTopWeightKg: baseline,
+                scheme: scheme,
+                workingSetIndex: index,
+                equipment: equipment
+            )
+            return set.weightKg >= expectedSetWeight - 0.001 &&
                 set.completedReps >= range.max &&
                 set.rir >= targetRIR
         }
 
-        if allHitTopRepsAndRIR && phase != .maintenance {
+        if allHitTopRepsAndRIR,
+           let neededStreak = PeriodizationEngine.policy(for: phase).requiredQualifyingSessionsToProgress {
+            let currentStreak = previousQualifyingStreak + 1
+            if currentStreak < neededStreak {
+                return ProgressionDecision(
+                    nextBaselineWeightKg: baseline,
+                    nextSessionTargetWeightKg: baseline,
+                    didProgressWeight: false,
+                    explanation: LocalizedCopy(
+                        da: "Cut-fase: bekræft toppen af rep-området én træning mere (\(currentStreak)/\(neededStreak)), før vægten øges.",
+                        ru: "Фаза сушки: закрепи верх повторений ещё на одной тренировке (\(currentStreak)/\(neededStreak)) перед повышением веса."
+                    )
+                )
+            }
+
             let incremented = equipment.nextStepUp(from: baseline)
             return ProgressionDecision(
                 nextBaselineWeightKg: incremented,
