@@ -157,6 +157,7 @@ public struct CompletedSetRecord: Codable, Sendable, Equatable, Identifiable {
     public var exerciseID: UUID
     public var setIndex: Int
     public var isWarmup: Bool
+    public var isDropStep: Bool
     public var weightKg: Double
     public var completedReps: Int
     public var rir: Int
@@ -170,6 +171,7 @@ public struct CompletedSetRecord: Codable, Sendable, Equatable, Identifiable {
         exerciseID: UUID,
         setIndex: Int,
         isWarmup: Bool,
+        isDropStep: Bool = false,
         weightKg: Double,
         completedReps: Int,
         rir: Int,
@@ -182,6 +184,7 @@ public struct CompletedSetRecord: Codable, Sendable, Equatable, Identifiable {
         self.exerciseID = exerciseID
         self.setIndex = setIndex
         self.isWarmup = isWarmup
+        self.isDropStep = isDropStep
         self.weightKg = weightKg
         self.completedReps = completedReps
         self.rir = rir

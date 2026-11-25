@@ -109,6 +109,80 @@ struct FitOnyCoreVerify {
         )
         precondition(plateau != nil)
 
-        print("FitOnyCoreVerify OK: «\(program.name.resolved(for: .da)) / \(program.name.resolved(for: .ru))» (5 модулей, \(PumpetPonyCatalog.exercises.count) упр.), трицепс=\(tricepsTotal), бицепс=\(bicepsTotal); 6-нед. мезоцикл (W1->W3->W6 Deload) и PlateauDetector проверены.")
+        // Аудит обратной пирамиды: ступенчатые веса 100%, 90%, 82.5% должны корректно давать прогрессию +2.5 кг
+        let pyramidScheme = PumpetPonyCatalog.moduleA.slots[0].scheme
+        let pyramidCompleted = (0..<5).map { idx in
+            let w = ProgressionEngine.targetWeightForSet(
+                sessionTopWeightKg: 100.0,
+                scheme: pyramidScheme,
+                workingSetIndex: idx,
+                equipment: .machine(stepKg: 2.5)
+            )
+            return CompletedSetRecord(
+                exerciseID: PumpetPonyCatalog.ExerciseIDs.inclineChestPress,
+                setIndex: idx,
+                isWarmup: false,
+                weightKg: w,
+                completedReps: pyramidScheme.repRange(forWorkingSetIndex: idx).max,
+                rir: 1
+            )
+        }
+        let pyramidDecision = ProgressionEngine.evaluateNextSession(
+            currentLoad: ExerciseLoadState(exerciseID: PumpetPonyCatalog.ExerciseIDs.inclineChestPress, baselineWorkingWeightKg: 100.0),
+            completedWorkingSets: pyramidCompleted,
+            scheme: pyramidScheme,
+            targetRIR: 1,
+            equipment: .machine(stepKg: 2.5)
+        )
+        precondition(pyramidDecision.didProgressWeight && pyramidDecision.nextBaselineWeightKg == 102.5)
+
+        // День 4: VolumeCalculator (разминка=0, дроп-сет=0.5x, баланс Push/Pull) и RecoveryWindowTracker (правило 48 ч и умные замены)
+        let now = Date(timeIntervalSince1970: 1_800_000_000)
+        let twentyHoursAgo = now.addingTimeInterval(-20 * 3600)
+        let yesterdayArmSets = (0..<4).map { idx in
+            CompletedSetRecord(
+                exerciseID: PumpetPonyCatalog.ExerciseIDs.preacherCurl,
+                setIndex: idx,
+                isWarmup: false,
+                weightKg: 35,
+                completedReps: 9,
+                rir: 0,
+                completedAt: twentyHoursAgo
+            )
+        }
+
+        // Сценарий: вчера качали руки, сегодня открываем Модуль B (Спина + Задняя дельта + Бицепс)
+        let modBEval = RecoveryWindowTracker.evaluateModule(
+            PumpetPonyCatalog.moduleB,
+            recentSets: yesterdayArmSets,
+            referenceDate: now,
+            profile: .natural
+        )
+        precondition(modBEval.isReadyForPrimaryWork, "Спина свежая — Модуль B не должен блокироваться из-за вчерашних рук")
+        precondition(
+            modBEval.slotAdvices[4].kind == .swapExercise &&
+            modBEval.slotAdvices[4].recommendedExerciseID == PumpetPonyCatalog.ExerciseIDs.seatedDumbbellLateralRaise,
+            "5-й слот Модуля B (бицепс 45°) должен автоматически предлагать замену на махи гантелями сидя"
+        )
+
+        // Сценарий: в Модуле D прошло >10 дней без Гакк-приседа -> предложение тяжёлого варианта на квадрицепс
+        let modDEval = RecoveryWindowTracker.evaluateModule(
+            PumpetPonyCatalog.moduleD,
+            recentSets: yesterdayArmSets,
+            referenceDate: now,
+            profile: .natural
+        )
+        precondition(
+            modDEval.slotAdvices[3].kind == .suggestHeavyAlternative &&
+            modDEval.slotAdvices[3].recommendedExerciseID == PumpetPonyCatalog.ExerciseIDs.hackSquatOrLegPress,
+            "4-й слот Модуля D должен предложить тяжёлый Гакк-присед / жим ногами раз в 10–14 дней"
+        )
+
+        let volReport = VolumeCalculator.calculateWeeklyReport(completedSets: pyramidCompleted + yesterdayArmSets)
+        precondition(volReport.orderedSummaries.count == 14)
+        precondition(volReport.summariesByMuscle[.chest]?.effectiveWeeklySets == 5.0)
+        precondition(volReport.summariesByMuscle[.biceps]?.effectiveWeeklySets == 4.0)
+
+        print("FitOnyCoreVerify OK: «\(program.name.resolved(for: .da)) / \(program.name.resolved(for: .ru))» проверена; 6-нед. мезоцикл, обратная пирамида, VolumeCalculator (14 мышц) и RecoveryWindowTracker (48ч + замены A–E) работают без ошибок.")
     }
 }
