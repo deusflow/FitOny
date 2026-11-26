@@ -135,18 +135,25 @@ public struct TempoPrescription: Codable, Sendable, Equatable {
     }
 }
 
-/// Разделение закреплённого базового веса атлета и эффективного веса текущей сессии.
+/// Разделение закреплённого базового веса атлета и эффективного веса текущей сессии (независимо для каждого варианта снаряда).
 public struct ExerciseLoadState: Codable, Sendable, Equatable {
     public var exerciseID: UUID
+    public var equipmentVariant: EquipmentVariant
     public var baselineWorkingWeightKg: Double
     public var sessionTargetWeightKg: Double
 
+    public var key: ExerciseEquipmentKey {
+        ExerciseEquipmentKey(exerciseID: exerciseID, variant: equipmentVariant)
+    }
+
     public init(
         exerciseID: UUID,
+        equipmentVariant: EquipmentVariant = .primary,
         baselineWorkingWeightKg: Double,
         sessionTargetWeightKg: Double? = nil
     ) {
         self.exerciseID = exerciseID
+        self.equipmentVariant = equipmentVariant
         self.baselineWorkingWeightKg = baselineWorkingWeightKg
         self.sessionTargetWeightKg = sessionTargetWeightKg ?? baselineWorkingWeightKg
     }
@@ -154,12 +161,17 @@ public struct ExerciseLoadState: Codable, Sendable, Equatable {
 
 public struct CompletedSetRecord: Codable, Sendable, Equatable, Identifiable {
     public var id: UUID
+    public var sessionID: UUID
     public var exerciseID: UUID
+    public var equipmentVariant: EquipmentVariant
     public var setIndex: Int
     public var isWarmup: Bool
     public var isDropStep: Bool
     public var weightKg: Double
     public var completedReps: Int
+    /// Опциональная пометка при разнице повторений левой/правой стороны в одноручных упражнениях.
+    public var leftSideReps: Int?
+    public var rightSideReps: Int?
     public var rir: Int
     public var peakHeartRate: Int?
     public var hrr60Drop: Int?
@@ -168,12 +180,16 @@ public struct CompletedSetRecord: Codable, Sendable, Equatable, Identifiable {
 
     public init(
         id: UUID = UUID(),
+        sessionID: UUID = UUID(uuidString: "00000000-0000-0000-0000-000000000001")!,
         exerciseID: UUID,
+        equipmentVariant: EquipmentVariant = .primary,
         setIndex: Int,
         isWarmup: Bool,
         isDropStep: Bool = false,
         weightKg: Double,
         completedReps: Int,
+        leftSideReps: Int? = nil,
+        rightSideReps: Int? = nil,
         rir: Int,
         peakHeartRate: Int? = nil,
         hrr60Drop: Int? = nil,
@@ -181,12 +197,16 @@ public struct CompletedSetRecord: Codable, Sendable, Equatable, Identifiable {
         completedAt: Date = .now
     ) {
         self.id = id
+        self.sessionID = sessionID
         self.exerciseID = exerciseID
+        self.equipmentVariant = equipmentVariant
         self.setIndex = setIndex
         self.isWarmup = isWarmup
         self.isDropStep = isDropStep
         self.weightKg = weightKg
         self.completedReps = completedReps
+        self.leftSideReps = leftSideReps
+        self.rightSideReps = rightSideReps
         self.rir = rir
         self.peakHeartRate = peakHeartRate
         self.hrr60Drop = hrr60Drop

@@ -25,6 +25,8 @@ public struct MacrocyclePolicy: Codable, Sendable, Equatable {
 public struct PrescribedSlot: Codable, Sendable, Equatable, Identifiable {
     public var id: UUID
     public var exerciseID: UUID
+    public var pairedExerciseID: UUID?
+    public var scheme: SetScheme
     public var workingSetCount: Int
     public var repRangesBySet: [RepRange]
     public var targetRIR: Int
@@ -32,20 +34,28 @@ public struct PrescribedSlot: Codable, Sendable, Equatable, Identifiable {
     public var minRestSeconds: Int
     public var maxRestSeconds: Int
     public var warmup: WarmupPrescription
+    public var tempo: TempoPrescription
+    public var slotNote: BilingualText?
 
     public init(
         id: UUID,
         exerciseID: UUID,
+        pairedExerciseID: UUID? = nil,
+        scheme: SetScheme,
         workingSetCount: Int,
         repRangesBySet: [RepRange],
         targetRIR: Int,
         weightScaleFactor: Double,
         minRestSeconds: Int,
         maxRestSeconds: Int,
-        warmup: WarmupPrescription
+        warmup: WarmupPrescription,
+        tempo: TempoPrescription = .controlledHypertrophy,
+        slotNote: BilingualText? = nil
     ) {
         self.id = id
         self.exerciseID = exerciseID
+        self.pairedExerciseID = pairedExerciseID
+        self.scheme = scheme
         self.workingSetCount = workingSetCount
         self.repRangesBySet = repRangesBySet
         self.targetRIR = targetRIR
@@ -53,6 +63,8 @@ public struct PrescribedSlot: Codable, Sendable, Equatable, Identifiable {
         self.minRestSeconds = minRestSeconds
         self.maxRestSeconds = maxRestSeconds
         self.warmup = warmup
+        self.tempo = tempo
+        self.slotNote = slotNote
     }
 }
 
@@ -155,7 +167,7 @@ public enum PeriodizationEngine {
         weekNumber: Int,
         totalWeeks: Int = 6,
         phase: MacrocyclePhase = .hypertrophy,
-        exercisesByID: [UUID: ExerciseDefinition] = PumpetPonyCatalog.exerciseByID
+        exercisesByID: [UUID: ExerciseDefinition] = ProgramCatalog.builtIn.exercisesByID
     ) -> PrescribedWeekModule {
         let clampedTotal = max(4, min(6, totalWeeks))
         let clampedWeek = max(1, min(clampedTotal, weekNumber))
@@ -205,16 +217,26 @@ public enum PeriodizationEngine {
 
             let restBonus = isCompound ? macroPolicy.compoundRestBonusSeconds : 0
 
+            let pairedID: UUID? = if case let .superset(paired, _, _) = slot.scheme {
+                paired
+            } else {
+                nil
+            }
+
             return PrescribedSlot(
                 id: slot.id,
                 exerciseID: slot.exerciseID,
+                pairedExerciseID: pairedID,
+                scheme: slot.scheme,
                 workingSetCount: finalWorkingSets,
                 repRangesBySet: repRanges,
                 targetRIR: targetRIR,
                 weightScaleFactor: 1.0,
                 minRestSeconds: slot.minRestSeconds + restBonus,
                 maxRestSeconds: slot.maxRestSeconds + restBonus,
-                warmup: slot.warmup
+                warmup: slot.warmup,
+                tempo: slot.tempo,
+                slotNote: slot.slotNote
             )
         }
 

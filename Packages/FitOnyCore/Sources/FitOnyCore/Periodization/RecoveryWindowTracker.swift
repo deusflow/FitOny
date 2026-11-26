@@ -105,41 +105,37 @@ public enum RecoveryWindowTracker {
         recentSets: [CompletedSetRecord],
         referenceDate: Date = .now,
         profile: PhysiologicalProfile = .natural,
-        exercisesByID: [UUID: ExerciseDefinition] = PumpetPonyCatalog.exerciseByID
+        exercisesByID: [UUID: ExerciseDefinition] = ProgramCatalog.builtIn.exercisesByID
     ) -> [MuscleGroup: MuscleRecoveryStatus] {
         let requiredHours = profile.directMuscleRecoveryHours
         let lookbackStart = referenceDate.addingTimeInterval(-requiredHours * 3600.0 * 1.5)
 
-        // Группируем подходы по календарным суткам тренировки, чтобы отличить прямой день мышцы от косвенного касания.
-        let calendar = Calendar(identifier: .gregorian)
-        var setsByDay: [DateComponents: [CompletedSetRecord]] = [:]
-
-        for set in recentSets where !set.isWarmup && set.rir <= 4 && set.completedAt >= lookbackStart && set.completedAt <= referenceDate {
-            let dayKey = calendar.dateComponents([.year, .month, .day], from: set.completedAt)
-            setsByDay[dayKey, default: []].append(set)
+        let filtered = recentSets.filter {
+            !$0.isWarmup && $0.rir <= 4 && $0.completedAt >= lookbackStart && $0.completedAt <= referenceDate
         }
+        let groupedSessions = groupSetsIntoTrainingSessions(filtered)
 
         var lastDirectTimestampByMuscle: [MuscleGroup: Date] = [:]
 
-        for (_, daySets) in setsByDay {
-            var stimulusInDay: [MuscleGroup: Double] = [:]
-            var latestInDay: [MuscleGroup: Date] = [:]
+        for sessionSets in groupedSessions {
+            var stimulusInSession: [MuscleGroup: Double] = [:]
+            var latestInSession: [MuscleGroup: Date] = [:]
 
-            for set in daySets {
+            for set in sessionSets {
                 guard let exercise = exercisesByID[set.exerciseID] else { continue }
                 let factor = set.isDropStep ? 0.5 : 1.0
                 for (muscle, coeff) in exercise.muscleContributions where coeff >= 0.99 {
-                    stimulusInDay[muscle, default: 0.0] += factor * coeff
-                    if let prev = latestInDay[muscle] {
-                        latestInDay[muscle] = max(prev, set.completedAt)
+                    stimulusInSession[muscle, default: 0.0] += factor * coeff
+                    if let prev = latestInSession[muscle] {
+                        latestInSession[muscle] = max(prev, set.completedAt)
                     } else {
-                        latestInDay[muscle] = set.completedAt
+                        latestInSession[muscle] = set.completedAt
                     }
                 }
             }
 
-            for (muscle, stimulus) in stimulusInDay where stimulus >= directStimulusThresholdSets {
-                if let stamp = latestInDay[muscle] {
+            for (muscle, stimulus) in stimulusInSession where stimulus >= directStimulusThresholdSets {
+                if let stamp = latestInSession[muscle] {
                     if let existing = lastDirectTimestampByMuscle[muscle] {
                         lastDirectTimestampByMuscle[muscle] = max(existing, stamp)
                     } else {
@@ -181,13 +177,13 @@ public enum RecoveryWindowTracker {
     /// 2) какие внутримодульные замены/опции срабатывают по условиям слотов (например, замена бицепса на махи в Модуле B).
     public static func evaluateModule(
         _ module: WorkoutModuleBlueprint,
-        candidateModules: [WorkoutModuleBlueprint] = PumpetPonyCatalog.programTemplate.modules,
+        candidateModules: [WorkoutModuleBlueprint] = ProgramCatalog.builtIn.programs[0].modules,
         recentSets: [CompletedSetRecord],
         weeklySets: [CompletedSetRecord] = [],
         plannedDirectMusclesNext24h: Set<MuscleGroup> = [],
         referenceDate: Date = .now,
         profile: PhysiologicalProfile = .natural,
-        exercisesByID: [UUID: ExerciseDefinition] = PumpetPonyCatalog.exerciseByID
+        exercisesByID: [UUID: ExerciseDefinition] = ProgramCatalog.builtIn.exercisesByID
     ) -> ModuleReadinessEvaluation {
         let statuses = recoveryStatuses(
             recentSets: recentSets,
@@ -195,10 +191,10 @@ public enum RecoveryWindowTracker {
             profile: profile,
             exercisesByID: exercisesByID
         )
-        let weeklyReport = VolumeCalculator.calculateWeeklyReport(
-            completedSets: weeklySets.isEmpty ? recentSets : weeklySets,
-            exercisesByID: exercisesByID,
-            profile: profile
+        let effectiveWeeklySets = weeklySets.isEmpty ? recentSets : weeklySets
+        let directTouchCounts = countDirectWeeklyTouchSessions(
+            weeklySets: effectiveWeeklySets,
+            exercisesByID: exercisesByID
         )
 
         let coreModuleMuscles = primaryRequiredMuscles(for: module, exercisesByID: exercisesByID)
@@ -217,7 +213,7 @@ public enum RecoveryWindowTracker {
             evaluateSlot(
                 slot,
                 statuses: statuses,
-                weeklyReport: weeklyReport,
+                directTouchCounts: directTouchCounts,
                 recentSets: recentSets,
                 plannedDirectMusclesNext24h: plannedDirectMusclesNext24h,
                 referenceDate: referenceDate,
@@ -279,7 +275,7 @@ public enum RecoveryWindowTracker {
     private static func evaluateSlot(
         _ slot: ModuleExerciseSlot,
         statuses: [MuscleGroup: MuscleRecoveryStatus],
-        weeklyReport: WeeklyVolumeReport,
+        directTouchCounts: [MuscleGroup: Int],
         recentSets: [CompletedSetRecord],
         plannedDirectMusclesNext24h: Set<MuscleGroup>,
         referenceDate: Date,
@@ -383,10 +379,9 @@ public enum RecoveryWindowTracker {
             }
             return keepDefault(slot)
 
-        case let .catchUpIfMuscleUnderVolume(muscle, reason):
-            let summary = weeklyReport.summariesByMuscle[muscle]
-            let needsSecondTouch = (summary?.directSets ?? 0.0) < 10.0
-            if needsSecondTouch {
+        case let .catchUpIfDirectTouchesBelow(muscle, requiredWeeklyTouches, reason):
+            let touchesDone = directTouchCounts[muscle, default: 0]
+            if touchesDone < requiredWeeklyTouches {
                 return SlotAdaptationAdvice(
                     slotID: slot.id,
                     originalExerciseID: slot.exerciseID,
@@ -409,12 +404,73 @@ public enum RecoveryWindowTracker {
                     recommendedRIR: slot.targetRIR,
                     kind: .skipOptionalOrGated,
                     message: LocalizedCopy(
-                        da: "2. rygtouch er allerede opfyldt i denne uge — kan springes over.",
-                        ru: "2-е касание спины за неделю уже выполнено — слот можно пропустить."
+                        da: "Ugens \(requiredWeeklyTouches) berøringer for \(muscle.displayName(for: .da)) er allerede opfyldt — kan springes over.",
+                        ru: "Целевые \(requiredWeeklyTouches) касания мышцы «\(muscle.displayName(for: .ru))» за неделю уже закрыты — слот можно пропустить."
                     )
                 )
             }
         }
+    }
+
+    /// Группирует подходы в реальные тренировочные сессии (по `sessionID` и 4-часовому окну),
+    /// чтобы тренировка через полночь (например, 23:35 -> 00:20) никогда не разрывалась на два разных дня.
+    internal static func groupSetsIntoTrainingSessions(_ sets: [CompletedSetRecord]) -> [[CompletedSetRecord]] {
+        guard !sets.isEmpty else { return [] }
+        let defaultPlaceholder = UUID(uuidString: "00000000-0000-0000-0000-000000000001")!
+
+        var explicitBySession: [UUID: [CompletedSetRecord]] = [:]
+        var ungrouped: [CompletedSetRecord] = []
+
+        for set in sets {
+            if set.sessionID != defaultPlaceholder {
+                explicitBySession[set.sessionID, default: []].append(set)
+            } else {
+                ungrouped.append(set)
+            }
+        }
+
+        var sessions: [[CompletedSetRecord]] = Array(explicitBySession.values)
+
+        let sortedUngrouped = ungrouped.sorted { $0.completedAt < $1.completedAt }
+        var currentCluster: [CompletedSetRecord] = []
+        for set in sortedUngrouped {
+            if let last = currentCluster.last, set.completedAt.timeIntervalSince(last.completedAt) <= 4.0 * 3600.0 {
+                currentCluster.append(set)
+            } else {
+                if !currentCluster.isEmpty { sessions.append(currentCluster) }
+                currentCluster = [set]
+            }
+        }
+        if !currentCluster.isEmpty {
+            sessions.append(currentCluster)
+        }
+
+        return sessions
+    }
+
+    private static func countDirectWeeklyTouchSessions(
+        weeklySets: [CompletedSetRecord],
+        exercisesByID: [UUID: ExerciseDefinition]
+    ) -> [MuscleGroup: Int] {
+        let validSets = weeklySets.filter { !$0.isWarmup && $0.rir <= 4 && $0.completedReps > 0 }
+        let sessions = groupSetsIntoTrainingSessions(validSets)
+        var touchCounts: [MuscleGroup: Int] = [:]
+
+        for sessionSets in sessions {
+            var stimulusInSession: [MuscleGroup: Double] = [:]
+            for set in sessionSets {
+                guard let ex = exercisesByID[set.exerciseID] else { continue }
+                let factor = set.isDropStep ? 0.5 : 1.0
+                for (muscle, coeff) in ex.muscleContributions where coeff >= 0.99 {
+                    stimulusInSession[muscle, default: 0.0] += factor * coeff
+                }
+            }
+            for (muscle, stimulus) in stimulusInSession where stimulus >= directStimulusThresholdSets {
+                touchCounts[muscle, default: 0] += 1
+            }
+        }
+
+        return touchCounts
     }
 
     private static func keepDefault(_ slot: ModuleExerciseSlot) -> SlotAdaptationAdvice {

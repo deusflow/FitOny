@@ -79,7 +79,7 @@ public enum AutoregulationEngine {
         case let .cableStack(stepKg, microPinKg):
             let step = microPinKg ?? stepKg
             return max(0.0, floor(rawKg / step) * step)
-        case let .machine(stepKg), let .bodyweight(stepKg):
+        case let .plateLoadedMachine(stepKg), let .machine(stepKg), let .bodyweight(stepKg):
             return max(0.0, floor(rawKg / stepKg) * stepKg)
         }
     }

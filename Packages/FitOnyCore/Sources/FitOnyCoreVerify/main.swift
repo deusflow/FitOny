@@ -304,6 +304,101 @@ struct FitOnyCoreVerify {
         let decodedSync = try! decoder.decode(WatchSyncEnvelope.self, from: try! encoder.encode(syncSample))
         precondition(decodedSync == syncSample, "Ошибка JSON round-trip конверта синхронизации")
 
-        print("FitOnyCoreVerify OK: ВСЁ ЯДРО (Дни 1–5) проверено — «Pumpet Pony», прогрессия, авторегуляция, 6-нед. цикл, 48ч/14 мышц, Readiness (\(peakSnap.score)/\(illnessSnap.score)), HRR (\(hrrCompound.hrr60DropBPM!) уд/мин), IMU (\(motionSuggestion!.detectedReps) повт., +\(motionSuggestion!.concentricSlowdownPercent)% замедл.) и JSON round-trip.")
+        // Проверка закрытия всех 7 архитектурных стыков:
+        // 1) сохранение второго упражнения суперсета в Модуле E №4
+        let ePrescribed = PeriodizationEngine.prescribeModule(PumpetPonyCatalog.moduleE, weekNumber: 2)
+        precondition(ePrescribed.slots.last?.pairedExerciseID == PumpetPonyCatalog.ExerciseIDs.reversePecDeck)
+
+        // 2) независимый учёт весов тренажёра (90 кг) и гантелей (32 кг за 1 гантель -> 34 кг)
+        let flatEx = PumpetPonyCatalog.ExerciseIDs.horizontalChestPress
+        let dbSets = (0..<4).map { idx in
+            CompletedSetRecord(
+                sessionID: UUID(),
+                exerciseID: flatEx,
+                equipmentVariant: .alternative,
+                setIndex: idx,
+                isWarmup: false,
+                weightKg: 32,
+                completedReps: 10,
+                rir: 1
+            )
+        }
+        let dbProg = ProgressionEngine.evaluateNextSession(
+            currentLoad: ExerciseLoadState(exerciseID: flatEx, equipmentVariant: .alternative, baselineWorkingWeightKg: 32),
+            completedWorkingSets: dbSets,
+            scheme: .straightSets(count: 4, reps: RepRange(min: 8, max: 10)),
+            targetRIR: 1,
+            equipment: .dumbbellRack()
+        )
+        let machineProg = ProgressionEngine.evaluateNextSession(
+            currentLoad: ExerciseLoadState(exerciseID: flatEx, equipmentVariant: .primary, baselineWorkingWeightKg: 90),
+            completedWorkingSets: dbSets,
+            scheme: .straightSets(count: 4, reps: RepRange(min: 8, max: 10)),
+            targetRIR: 1,
+            equipment: .machine(stepKg: 2.5)
+        )
+        precondition(dbProg.didProgressWeight && dbProg.nextBaselineWeightKg == 34.0)
+        precondition(!machineProg.didProgressWeight && machineProg.nextBaselineWeightKg == 90.0)
+        precondition(EquipmentProfile.dumbbellRack().loadEntryHint.ru == "за 1 гантель")
+        precondition(EquipmentProfile.plateLoadedMachine().loadEntryHint.ru == "общий вес блинов")
+
+        // 3) SessionComposer: замена бицепса на махи в Модуле B во время недели Deload режет заменённое упражнение вдвое (4 -> 2 сета, RIR 3)
+        let deloadComposedB = SessionComposer.compose(
+            module: PumpetPonyCatalog.moduleB,
+            program: program,
+            weekNumber: 6,
+            totalWeeks: 6,
+            phase: .hypertrophy,
+            recentSets: yesterdayArmSets,
+            referenceDate: now
+        )
+        precondition(deloadComposedB.weekRole == .deload)
+        precondition(deloadComposedB.exercises.last?.exerciseID == PumpetPonyCatalog.ExerciseIDs.seatedDumbbellLateralRaise)
+        precondition(deloadComposedB.exercises.last?.workingSetRepRanges.count == 2 && deloadComposedB.exercises.last?.targetRIR == 3)
+
+        // 4) Гибкая очередь модулей без привязки к дням недели (A -> B -> D -> C -> A) и кастомные программы в ProgramCatalog
+        precondition(program.nextModuleInQueue(afterCompletedModuleCode: "A")?.code == "B")
+        precondition(program.nextModuleInQueue(afterCompletedModuleCode: "B")?.code == "D")
+        precondition(program.nextModuleInQueue(afterCompletedModuleCode: "D")?.code == "C")
+        precondition(program.nextModuleInQueue(afterCompletedModuleCode: "C")?.code == "A")
+
+        var customCatalog = ProgramCatalog.builtIn
+        let customEx = ExerciseDefinition(
+            code: "CUSTOM_DIP",
+            name: BilingualText(da: "Dips med vægt", ru: "Брусья с весом"),
+            isCompound: true,
+            equipment: .bodyweight(addedWeightStepKg: 2.5),
+            motionProfile: .verticalBarPath,
+            muscleContributions: [.chest: 1.0, .triceps: 0.75],
+            defaultRestSeconds: 150
+        )
+        customCatalog.upsertExercise(customEx)
+        let customProg = ProgramTemplate(
+            slug: "my-custom-upper",
+            name: .custom("My Custom Split"),
+            isCustom: true,
+            recommendedDaysPerWeek: 3,
+            modules: [
+                WorkoutModuleBlueprint(
+                    code: "U1",
+                    title: .custom("Upper 1"),
+                    slots: [ModuleExerciseSlot(exerciseID: customEx.id, scheme: .straightSets(count: 3, reps: RepRange(min: 6, max: 8)), targetRIR: 1, minRestSeconds: 150)]
+                )
+            ]
+        )
+        customCatalog.upsertProgram(customProg)
+        precondition(customCatalog.programs.count == 2 && customCatalog.exercisesByID[customEx.id] != nil)
+
+        // 5) Живая телеметрия тренировки на часах (время, ЧСС, ккал) в конверте синхронизации
+        let telemetryEnv = WatchSyncEnvelope(
+            payload: .liveWorkoutTelemetryUpdated(
+                sessionID: UUID(),
+                telemetry: LiveWorkoutTelemetry(elapsedSeconds: 2540, currentHeartRateBPM: 142, activeKilocalories: 318, totalKilocalories: 395)
+            )
+        )
+        let decodedTelemetry = try! decoder.decode(WatchSyncEnvelope.self, from: try! encoder.encode(telemetryEnv))
+        precondition(decodedTelemetry == telemetryEnv)
+
+        print("FitOnyCoreVerify OK: ВСЁ ЯДРО + АРХИТЕКТУРНЫЙ АУДИТ пройдены — SessionComposer, раздельные веса снарядов, суперсеты, полуночные сессии, кастомные программы и живая телеметрия часов проверены.")
     }
 }
