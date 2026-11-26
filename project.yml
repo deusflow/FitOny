@@ -10,6 +10,8 @@ options:
 packages:
   FitOnyCore:
     path: Packages/FitOnyCore
+  FitOnyStorage:
+    path: Packages/FitOnyStorage
 
 settings:
   base:
@@ -44,6 +46,8 @@ targets:
     dependencies:
       - package: FitOnyCore
         product: FitOnyCore
+      - package: FitOnyStorage
+        product: FitOnyStorage
       - target: FitOny-Watch
         embed: true
 
@@ -106,6 +110,12 @@ schemes:
     build:
       targets:
         FitOny-iOS: all
+    run:
+      config: Debug
+
+  FitOny-Watch:
+    build:
+      targets:
         FitOny-Watch: all
     run:
       config: Debug
@@ -114,7 +124,6 @@ schemes:
     build:
       targets:
         FitOny-iOS: all
-        FitOny-Watch: all
         FitOny-PhoneLiveActivity: all
         FitOny-WatchComplications: all
     run:
