@@ -1,17 +1,41 @@
 import SwiftUI
+import SwiftData
 import FitOnyCore
 
 @main
 struct FitOnyApp: App {
-    @State private var selectedTheme: AppTheme = .fitOnyPink
+    private let persistence = PersistenceController.shared
+
+    @State private var selectedTheme: AppTheme
     @State private var languageState = LanguageState()
+
+    init() {
+        let initialTheme = PersistenceController.shared.loadInitialTheme()
+        _selectedTheme = State(initialValue: initialTheme)
+    }
 
     var body: some Scene {
         WindowGroup {
             RootTabContainerView(theme: $selectedTheme)
                 .environment(languageState)
                 .environment(\.locale, Locale(identifier: languageState.effectiveLanguage.localeIdentifier))
+                .onChange(of: selectedTheme) { _, newValue in
+                    persistence.saveSelectedTheme(newValue)
+                }
+                .onChange(of: languageState.primaryLanguage) { _, newValue in
+                    persistence.syncLanguageSettings(
+                        primary: newValue,
+                        showRussianHint: languageState.showSecondaryRussianHint
+                    )
+                }
+                .onChange(of: languageState.showSecondaryRussianHint) { _, newValue in
+                    persistence.syncLanguageSettings(
+                        primary: languageState.primaryLanguage,
+                        showRussianHint: newValue
+                    )
+                }
         }
+        .modelContainer(persistence.container)
     }
 }
 
