@@ -6,20 +6,15 @@ import FitOnyCore
 @MainActor
 @Observable
 final class LanguageState {
-    private enum Keys {
-        static let primaryLanguage = "fitony.primaryLanguage"
-        static let showRussianHint = "fitony.showSecondaryRussianHint"
-    }
-
     var primaryLanguage: AppLanguage {
         didSet {
-            UserDefaults.standard.set(primaryLanguage.rawValue, forKey: Keys.primaryLanguage)
+            SharedDefaults.store.set(primaryLanguage.rawValue, forKey: SharedDefaults.Keys.phonePrimaryLanguage)
         }
     }
 
     var showSecondaryRussianHint: Bool {
         didSet {
-            UserDefaults.standard.set(showSecondaryRussianHint, forKey: Keys.showRussianHint)
+            SharedDefaults.store.set(showSecondaryRussianHint, forKey: SharedDefaults.Keys.showSecondaryRussianHint)
         }
     }
 
@@ -31,15 +26,16 @@ final class LanguageState {
     }
 
     init() {
-        if let saved = UserDefaults.standard.string(forKey: Keys.primaryLanguage),
+        let store = SharedDefaults.store
+        if let saved = store.string(forKey: SharedDefaults.Keys.phonePrimaryLanguage),
            let parsed = AppLanguage(rawValue: saved) {
             self.primaryLanguage = parsed
         } else {
             self.primaryLanguage = .da
         }
 
-        if UserDefaults.standard.object(forKey: Keys.showRussianHint) != nil {
-            self.showSecondaryRussianHint = UserDefaults.standard.bool(forKey: Keys.showRussianHint)
+        if store.object(forKey: SharedDefaults.Keys.showSecondaryRussianHint) != nil {
+            self.showSecondaryRussianHint = store.bool(forKey: SharedDefaults.Keys.showSecondaryRussianHint)
         } else {
             self.showSecondaryRussianHint = true
         }

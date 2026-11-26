@@ -6,7 +6,7 @@ public enum VolumeCalculator {
     /// - Ступени дроп-сета (`isDropStep`) учитываются с понижающим множителем `0.5`, чтобы не раздувать мнимый объём.
     public static func calculateWeeklyReport(
         completedSets: [CompletedSetRecord],
-        exercisesByID: [UUID: ExerciseDefinition] = PumpetPonyCatalog.exerciseByID,
+        exercisesByID: [UUID: ExerciseDefinition] = ProgramCatalog.builtIn.exercisesByID,
         profile: PhysiologicalProfile = .natural,
         landmarkOverrides: [MuscleGroup: VolumeLandmarks] = [:]
     ) -> WeeklyVolumeReport {

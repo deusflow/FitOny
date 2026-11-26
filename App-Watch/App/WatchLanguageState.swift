@@ -6,16 +6,14 @@ import FitOnyCore
 @MainActor
 @Observable
 final class WatchLanguageState {
-    private static let key = "fitony.watch.primaryLanguage"
-
     var currentLanguage: AppLanguage {
         didSet {
-            UserDefaults.standard.set(currentLanguage.rawValue, forKey: Self.key)
+            SharedDefaults.store.set(currentLanguage.rawValue, forKey: SharedDefaults.Keys.watchPrimaryLanguage)
         }
     }
 
     init() {
-        if let saved = UserDefaults.standard.string(forKey: Self.key),
+        if let saved = SharedDefaults.store.string(forKey: SharedDefaults.Keys.watchPrimaryLanguage),
            let parsed = AppLanguage(rawValue: saved) {
             self.currentLanguage = parsed
         } else {

@@ -54,7 +54,7 @@ public enum SlotCondition: Codable, Sendable, Equatable {
         alternativeRIR: Int,
         reason: LocalizedCopy
     )
-    case catchUpIfMuscleUnderVolume(muscle: MuscleGroup, reason: LocalizedCopy)
+    case catchUpIfDirectTouchesBelow(muscle: MuscleGroup, requiredWeeklyTouches: Int, reason: LocalizedCopy)
 }
 
 public struct ModuleExerciseSlot: Codable, Sendable, Equatable, Identifiable {
@@ -111,28 +111,51 @@ public struct WorkoutModuleBlueprint: Codable, Sendable, Equatable, Identifiable
     }
 }
 
-/// Универсальный пресет тренировочной программы (для PureGym A–E и будущих авторских программ).
+/// Универсальный пресет тренировочной программы (поддерживает как встроенные программы, так и созданные пользователем).
 public struct ProgramTemplate: Codable, Sendable, Equatable, Identifiable {
     public var id: UUID
     public var slug: String
     public var name: BilingualText
+    public var isCustom: Bool
     public var recommendedDaysPerWeek: Int
     public var defaultMesocycleWeeks: Int
+    /// Гибкая очередь основных модулей без привязки к дням недели (например, ["B", "D", "A", "C"]).
+    public var rotationOrderCodes: [String]
+    /// Опциональные добивочные модули (например, ["E"]).
+    public var optionalModuleCodes: Set<String>
     public var modules: [WorkoutModuleBlueprint]
 
     public init(
         id: UUID = UUID(),
         slug: String,
         name: BilingualText,
+        isCustom: Bool = false,
         recommendedDaysPerWeek: Int,
         defaultMesocycleWeeks: Int = 6,
+        rotationOrderCodes: [String]? = nil,
+        optionalModuleCodes: Set<String> = [],
         modules: [WorkoutModuleBlueprint]
     ) {
         self.id = id
         self.slug = slug
         self.name = name
+        self.isCustom = isCustom
         self.recommendedDaysPerWeek = recommendedDaysPerWeek
         self.defaultMesocycleWeeks = defaultMesocycleWeeks
         self.modules = modules
+        let nonOptional = modules.map(\.code).filter { !optionalModuleCodes.contains($0) }
+        self.rotationOrderCodes = rotationOrderCodes ?? nonOptional
+        self.optionalModuleCodes = optionalModuleCodes
+    }
+
+    public func nextModuleInQueue(afterCompletedModuleCode lastCode: String?) -> WorkoutModuleBlueprint? {
+        guard !rotationOrderCodes.isEmpty else { return modules.first }
+        let nextCode: String
+        if let lastCode, let idx = rotationOrderCodes.firstIndex(of: lastCode) {
+            nextCode = rotationOrderCodes[(idx + 1) % rotationOrderCodes.count]
+        } else {
+            nextCode = rotationOrderCodes[0]
+        }
+        return modules.first { $0.code == nextCode } ?? modules.first
     }
 }

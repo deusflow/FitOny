@@ -13,7 +13,7 @@ struct ReadinessComplicationWidget: Widget {
     let kind = "com.deusflow.fitony.watch.readiness"
 
     private var currentLanguage: AppLanguage {
-        if let saved = UserDefaults.standard.string(forKey: "fitony.watch.primaryLanguage"),
+        if let saved = SharedDefaults.store.string(forKey: SharedDefaults.Keys.watchPrimaryLanguage),
            let parsed = AppLanguage(rawValue: saved) {
             return parsed
         }

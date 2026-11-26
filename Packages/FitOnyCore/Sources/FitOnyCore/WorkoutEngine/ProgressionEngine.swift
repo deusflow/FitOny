@@ -1,17 +1,20 @@
 import Foundation
 
 public struct ProgressionDecision: Codable, Sendable, Equatable {
+    public var equipmentVariant: EquipmentVariant
     public var nextBaselineWeightKg: Double
     public var nextSessionTargetWeightKg: Double
     public var didProgressWeight: Bool
     public var explanation: LocalizedCopy
 
     public init(
+        equipmentVariant: EquipmentVariant = .primary,
         nextBaselineWeightKg: Double,
         nextSessionTargetWeightKg: Double,
         didProgressWeight: Bool,
         explanation: LocalizedCopy
     ) {
+        self.equipmentVariant = equipmentVariant
         self.nextBaselineWeightKg = nextBaselineWeightKg
         self.nextSessionTargetWeightKg = nextSessionTargetWeightKg
         self.didProgressWeight = didProgressWeight
@@ -34,8 +37,11 @@ public enum ProgressionEngine {
     ) -> ProgressionDecision {
         let baseline = currentLoad.baselineWorkingWeightKg
 
+        let variant = currentLoad.equipmentVariant
+
         if isDeloadWeek {
             return ProgressionDecision(
+                equipmentVariant: variant,
                 nextBaselineWeightKg: baseline,
                 nextSessionTargetWeightKg: baseline,
                 didProgressWeight: false,
@@ -47,12 +53,13 @@ public enum ProgressionEngine {
         }
 
         let workingSets = completedWorkingSets
-            .filter { !$0.isWarmup && !$0.isDropStep }
+            .filter { !$0.isWarmup && !$0.isDropStep && $0.equipmentVariant == variant }
             .sorted { $0.setIndex < $1.setIndex }
         let requiredCount = scheme.workingSetCount
 
         guard workingSets.count >= requiredCount, requiredCount > 0 else {
             return ProgressionDecision(
+                equipmentVariant: variant,
                 nextBaselineWeightKg: baseline,
                 nextSessionTargetWeightKg: baseline,
                 didProgressWeight: false,
@@ -81,6 +88,7 @@ public enum ProgressionEngine {
             let currentStreak = previousQualifyingStreak + 1
             if currentStreak < neededStreak {
                 return ProgressionDecision(
+                    equipmentVariant: variant,
                     nextBaselineWeightKg: baseline,
                     nextSessionTargetWeightKg: baseline,
                     didProgressWeight: false,
@@ -93,6 +101,7 @@ public enum ProgressionEngine {
 
             let incremented = equipment.nextStepUp(from: baseline)
             return ProgressionDecision(
+                equipmentVariant: variant,
                 nextBaselineWeightKg: incremented,
                 nextSessionTargetWeightKg: incremented,
                 didProgressWeight: true,
@@ -104,6 +113,7 @@ public enum ProgressionEngine {
         }
 
         return ProgressionDecision(
+            equipmentVariant: variant,
             nextBaselineWeightKg: baseline,
             nextSessionTargetWeightKg: baseline,
             didProgressWeight: false,

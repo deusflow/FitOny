@@ -52,7 +52,7 @@ public enum PumpetPonyCatalog {
                 ru: "Жим на верх груди 30° (рычажный / гантели)"
             ),
             isCompound: true,
-            equipment: .machine(stepKg: 2.5),
+            equipment: .plateLoadedMachine(stepKg: 2.5),
             alternativeEquipment: .dumbbellRack(),
             motionProfile: .verticalBarPath,
             muscleContributions: [.chest: 1.0, .frontDelt: 0.5, .triceps: 0.5],
@@ -132,7 +132,7 @@ public enum PumpetPonyCatalog {
                 ru: "Тяга с упором грудью (рычажный тренажёр / Т-гриф)"
             ),
             isCompound: true,
-            equipment: .machine(stepKg: 2.5),
+            equipment: .plateLoadedMachine(stepKg: 2.5),
             alternativeEquipment: .barbell(barWeightKg: 20.0, stepKg: 2.5),
             motionProfile: .arcWristPath,
             muscleContributions: [.upperBack: 1.0, .lats: 0.5, .rearDelt: 0.5, .biceps: 0.5],
@@ -301,7 +301,8 @@ public enum PumpetPonyCatalog {
                 ru: "Ягодичный мост (тренажёр Hip Thrust / Смит)"
             ),
             isCompound: true,
-            equipment: .machine(stepKg: 2.5),
+            equipment: .plateLoadedMachine(stepKg: 2.5),
+            alternativeEquipment: .barbell(barWeightKg: 15.0, stepKg: 2.5),
             motionProfile: .stationaryWrist,
             muscleContributions: [.glutes: 1.0, .hamstrings: 0.25],
             defaultRestSeconds: 150,
@@ -347,7 +348,7 @@ public enum PumpetPonyCatalog {
                 ru: "Гакк-присед или жим ногами (тяжёлое удержание)"
             ),
             isCompound: true,
-            equipment: .machine(stepKg: 5.0),
+            equipment: .plateLoadedMachine(stepKg: 5.0),
             motionProfile: .stationaryWrist,
             muscleContributions: [.quads: 1.0, .glutes: 0.5],
             defaultRestSeconds: 165
@@ -423,8 +424,11 @@ public enum PumpetPonyCatalog {
         id: templateID,
         slug: "pumpet-pony-puregym",
         name: BilingualText(da: "Pumpet Pony", ru: "Накаченная пони"),
+        isCustom: false,
         recommendedDaysPerWeek: 5,
         defaultMesocycleWeeks: 6,
+        rotationOrderCodes: ["A", "B", "D", "C"],
+        optionalModuleCodes: ["E"],
         modules: [
             moduleA,
             moduleB,
@@ -730,8 +734,9 @@ public enum PumpetPonyCatalog {
                 warmup: .single12(),
                 targetRIR: 1,
                 minRestSeconds: 120,
-                condition: .catchUpIfMuscleUnderVolume(
+                condition: .catchUpIfDirectTouchesBelow(
                     muscle: .lats,
+                    requiredWeeklyTouches: 2,
                     reason: LocalizedCopy(
                         da: "Udføres hvis du sprang 2. rygtouch over i Modul D.",
                         ru: "Выполнять, если пропустил 2-е касание спины в Модуле D."
