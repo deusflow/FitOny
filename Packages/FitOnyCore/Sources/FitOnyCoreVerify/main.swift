@@ -265,6 +265,45 @@ struct FitOnyCoreVerify {
         precondition((motionSuggestion?.concentricSlowdownPercent ?? 0) >= 45.0)
         precondition(RepMotionAnalyzer.analyze(samples: curlSamples, motionProfile: .stationaryWrist) == nil)
 
-        print("FitOnyCoreVerify OK: ВСЁ ЯДРО (Дни 1–5) проверено — «Pumpet Pony», прогрессия, авторегуляция, 6-нед. цикл, 48ч/14 мышц, Readiness (\(peakSnap.score)/\(illnessSnap.score)) и IMU (\(motionSuggestion!.detectedReps) повт., +\(motionSuggestion!.concentricSlowdownPercent)% замедл.).")
+        // Финальный аудит Ядра: защита пустого грифа в одиночной разминке, пульсовой советник HRR и JSON round-trip
+        let emptyBarWarmup = WarmupGenerator.generate(
+            firstWorkingWeightKg: 20,
+            equipment: .barbell(barWeightKg: 20, stepKg: 2.5),
+            prescription: .single12()
+        )
+        precondition(emptyBarWarmup.isEmpty, "Для пустого грифа 20 кг одиночная разминка не должна выдавать 20 кг поверх рабочего веса")
+
+        let hrrCompound = HeartRateRecoveryEngine.evaluateAtEndOfRest(
+            currentHeartRateBPM: 138,
+            peakSetHeartRateBPM: 166,
+            heartRateAt60sRestBPM: 134,
+            restingHeartRateBPM: 55,
+            estimatedMaxHeartRateBPM: 190,
+            isCompoundExercise: true
+        )
+        precondition(hrrCompound.hrr60DropBPM == 32 && hrrCompound.shouldSuggestExtraRest && hrrCompound.suggestedExtraSeconds == 30)
+
+        let hrrIsolation = HeartRateRecoveryEngine.evaluateAtEndOfRest(
+            currentHeartRateBPM: 138,
+            restingHeartRateBPM: 55,
+            estimatedMaxHeartRateBPM: 190,
+            isCompoundExercise: false
+        )
+        precondition(!hrrIsolation.shouldSuggestExtraRest)
+
+        let encoder = JSONEncoder()
+        let decoder = JSONDecoder()
+
+        let decodedProgram = try! decoder.decode(ProgramTemplate.self, from: try! encoder.encode(PumpetPonyCatalog.programTemplate))
+        precondition(decodedProgram == PumpetPonyCatalog.programTemplate, "Ошибка JSON round-trip шаблона программы")
+
+        let decodedWeekPlan = try! decoder.decode(PrescribedWeekModule.self, from: try! encoder.encode(dWeek3))
+        precondition(decodedWeekPlan == dWeek3, "Ошибка JSON round-trip недельного плана")
+
+        let syncSample = WatchSyncEnvelope(payload: .setCompleted(sessionID: UUID(), set: pyramidCompleted[0]))
+        let decodedSync = try! decoder.decode(WatchSyncEnvelope.self, from: try! encoder.encode(syncSample))
+        precondition(decodedSync == syncSample, "Ошибка JSON round-trip конверта синхронизации")
+
+        print("FitOnyCoreVerify OK: ВСЁ ЯДРО (Дни 1–5) проверено — «Pumpet Pony», прогрессия, авторегуляция, 6-нед. цикл, 48ч/14 мышц, Readiness (\(peakSnap.score)/\(illnessSnap.score)), HRR (\(hrrCompound.hrr60DropBPM!) уд/мин), IMU (\(motionSuggestion!.detectedReps) повт., +\(motionSuggestion!.concentricSlowdownPercent)% замедл.) и JSON round-trip.")
     }
 }

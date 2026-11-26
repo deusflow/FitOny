@@ -19,7 +19,7 @@ public enum WarmupGenerator {
         case let .single(percentage, targetReps):
             let raw = firstWorkingWeightKg * percentage
             let rounded = equipment.roundToAvailable(raw)
-            guard rounded > 0 else { return [] }
+            guard rounded > 0, rounded < firstWorkingWeightKg else { return [] }
             return [WarmupSetStep(weightKg: rounded, targetReps: targetReps)]
 
         case let .pyramid(steps):

@@ -101,6 +101,32 @@ struct ReadinessAndMotionTests {
         #expect(disabledOnLegPress == nil)
     }
 
+    @Test("HeartRateRecoveryEngine suggests +30s on high HR for compound lifts and stays silent on isolation")
+    func heartRateRecoveryEvaluation() {
+        let compoundHighHR = HeartRateRecoveryEngine.evaluateAtEndOfRest(
+            currentHeartRateBPM: 140,
+            peakSetHeartRateBPM: 168,
+            heartRateAt60sRestBPM: 136,
+            restingHeartRateBPM: 55,
+            estimatedMaxHeartRateBPM: 190,
+            isCompoundExercise: true
+        )
+        #expect(compoundHighHR.hrr60DropBPM == 32)
+        #expect(compoundHighHR.shouldSuggestExtraRest)
+        #expect(compoundHighHR.suggestedExtraSeconds == 30)
+
+        let isolationHighHR = HeartRateRecoveryEngine.evaluateAtEndOfRest(
+            currentHeartRateBPM: 140,
+            peakSetHeartRateBPM: 155,
+            heartRateAt60sRestBPM: 138,
+            restingHeartRateBPM: 55,
+            estimatedMaxHeartRateBPM: 190,
+            isCompoundExercise: false
+        )
+        #expect(!isolationHighHR.shouldSuggestExtraRest)
+        #expect(isolationHighHR.suggestedExtraSeconds == 0)
+    }
+
     static func synthesizeCurlSet(repConcentricDurations: [TimeInterval]) -> [IMUSample] {
         var result: [IMUSample] = []
         let dt = 0.02
