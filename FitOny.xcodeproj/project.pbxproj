@@ -1,0 +1,880 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		0992A908FD2E063A33F160C7 /* BiometricVaultService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97884A044E05BD51D7391025 /* BiometricVaultService.swift */; };
+		09983C0113FF0F32577C9F15 /* WatchActiveSetScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD2EAEAD38E53E7F7357F41F /* WatchActiveSetScreen.swift */; };
+		1808AD1FDDD74D8EC1974A67 /* FitOnyWatchApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F2FA7AD065F81A3F029147A /* FitOnyWatchApp.swift */; };
+		1827497E6EA620D8850781FF /* FitOny-Watch.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 5C0EAAE01E6DE39497451AEE /* FitOny-Watch.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		19AD2ADD8C1ADD854D09BC60 /* SettingsScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89949BD67ADFCDD746EB4AFE /* SettingsScreen.swift */; };
+		19FC3AFF16C8F0174EE709F2 /* ProgramsScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E0B31BACFB1CE72C8C1F3F3 /* ProgramsScreen.swift */; };
+		2083726219BA4B885CA4E023 /* AdvancedVaultScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = FED382811BE345EBD6E4BE1F /* AdvancedVaultScreen.swift */; };
+		210F7C9BC543AC91835F8F34 /* FitOnyCore in Frameworks */ = {isa = PBXBuildFile; productRef = 938EBAC8258E735F6A79747C /* FitOnyCore */; };
+		2196466B6522E84F2D947ABD /* ReadinessComplicationBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 166691E52D6D0046799970A8 /* ReadinessComplicationBundle.swift */; };
+		2AF044FAD88F9D3F2FDFADD7 /* AnalyticsScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = A73813EC311ECD9FCD0DBE5E /* AnalyticsScreen.swift */; };
+		2B47C1481C62197DE6883C2C /* PersistenceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2907B62451BD78E8F4BA0C9B /* PersistenceController.swift */; };
+		2D65A6B734F56A31DDDAF104 /* HealthKitService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31A03C94231C5F448CFBB5D1 /* HealthKitService.swift */; };
+		2E775F18B78DD79550DEF750 /* FitOnyCore in Frameworks */ = {isa = PBXBuildFile; productRef = 8919EC188C17306CFA8DA27C /* FitOnyCore */; };
+		2F326AF6DC5C30B117A9E1CA /* WristMotionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24D438E2D041CEA3236D41CF /* WristMotionService.swift */; };
+		4478828E06B356950FA9284B /* FitOnyCore in Frameworks */ = {isa = PBXBuildFile; productRef = 26D5156EFEBFB2F16A4C031B /* FitOnyCore */; };
+		466254DFFEC766C3778F5A55 /* AppTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85220C7C2E1450E28D559B0D /* AppTheme.swift */; };
+		5939E72194EB1A46D8EE573F /* PhoneWatchSyncService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF9CC7EC79C13EBE94D97DFF /* PhoneWatchSyncService.swift */; };
+		601FC0B72F21EAEA7646B14B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 525F0B56EA7B8502280E425A /* Assets.xcassets */; };
+		701A2052229A4AE82F6B33DF /* LanguageQuickSwitchButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F992D122CEF6A8ACE7114EC /* LanguageQuickSwitchButton.swift */; };
+		7EC4C5538ED7063C6B2958ED /* FitOnyApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4D1DF01B2AF8B7736EDFEF3 /* FitOnyApp.swift */; };
+		7FCE6E89ACE9ACF9FA1880C0 /* FitOnyCore in Frameworks */ = {isa = PBXBuildFile; productRef = EC84B729A89E1F1C243455A1 /* FitOnyCore */; };
+		828C57F9CB4A50358D264AD9 /* ActiveWorkoutScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F09C7389039C874668797A9 /* ActiveWorkoutScreen.swift */; };
+		9FB35312FFAF3645D34F41FE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 63AC48FB2BD9E211AB138778 /* Assets.xcassets */; };
+		A11256535B8AE4586E7274C2 /* WatchMorningCheckInScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = D150FFF00C353A920BF6A157 /* WatchMorningCheckInScreen.swift */; };
+		B091908B7CEBFDA03CB6BA8B /* WorkoutLiveActivityBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE7BF11D1FCAB40EF70AC7CE /* WorkoutLiveActivityBundle.swift */; };
+		B9CBF691D68CDB73A278C047 /* WatchWorkoutSessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9158757DBA126F76664AD529 /* WatchWorkoutSessionManager.swift */; };
+		D5ECCA9062A3CA031AC178C9 /* FitOnyStorage in Frameworks */ = {isa = PBXBuildFile; productRef = F84E643ABDE147D70ADBB662 /* FitOnyStorage */; };
+		D8ACA36D83CC5B67A56C9D50 /* WatchLanguageState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88D6A6B1693F2CC286AEF7DA /* WatchLanguageState.swift */; };
+		EC6C451ED2E1997C725862D0 /* TodayScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3AF7586F30BBE27D21A8A2B /* TodayScreen.swift */; };
+		EE983DA5E142E33E18A3378F /* WatchHomeScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = F12F809EBF11ABFDBD444F72 /* WatchHomeScreen.swift */; };
+		FD211D5F40C4479EF15B5D41 /* LanguageState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 923C7830815E6E80447D90CB /* LanguageState.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		F49C2F2E97566AF82D8CC565 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 97EBBDCEFBB831AF021EC6A3 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 07DEA0D7A23020574E0EC222;
+			remoteInfo = "FitOny-Watch";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		45324C91D9C6D454934E031C /* Embed Watch Content */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "$(CONTENTS_FOLDER_PATH)/Watch";
+			dstSubfolderSpec = 16;
+			files = (
+				1827497E6EA620D8850781FF /* FitOny-Watch.app in Embed Watch Content */,
+			);
+			name = "Embed Watch Content";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		0B2DB49F2CDB06F52E1593BE /* FitOnyStorage */ = {isa = PBXFileReference; lastKnownFileType = folder; name = FitOnyStorage; path = Packages/FitOnyStorage; sourceTree = SOURCE_ROOT; };
+		166691E52D6D0046799970A8 /* ReadinessComplicationBundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadinessComplicationBundle.swift; sourceTree = "<group>"; };
+		1EFAD1DA129FF7C1B433EBD1 /* FitOnyCore */ = {isa = PBXFileReference; lastKnownFileType = folder; name = FitOnyCore; path = Packages/FitOnyCore; sourceTree = SOURCE_ROOT; };
+		1F09C7389039C874668797A9 /* ActiveWorkoutScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActiveWorkoutScreen.swift; sourceTree = "<group>"; };
+		24D438E2D041CEA3236D41CF /* WristMotionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WristMotionService.swift; sourceTree = "<group>"; };
+		2907B62451BD78E8F4BA0C9B /* PersistenceController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceController.swift; sourceTree = "<group>"; };
+		31A03C94231C5F448CFBB5D1 /* HealthKitService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthKitService.swift; sourceTree = "<group>"; };
+		525F0B56EA7B8502280E425A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		52E1E94854F93E96B9BFE058 /* FitOny-WatchComplications.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "FitOny-WatchComplications.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
+		5C0EAAE01E6DE39497451AEE /* FitOny-Watch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "FitOny-Watch.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		63AC48FB2BD9E211AB138778 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		6E0B31BACFB1CE72C8C1F3F3 /* ProgramsScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgramsScreen.swift; sourceTree = "<group>"; };
+		85220C7C2E1450E28D559B0D /* AppTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppTheme.swift; sourceTree = "<group>"; };
+		88D6A6B1693F2CC286AEF7DA /* WatchLanguageState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchLanguageState.swift; sourceTree = "<group>"; };
+		89949BD67ADFCDD746EB4AFE /* SettingsScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsScreen.swift; sourceTree = "<group>"; };
+		8F2FA7AD065F81A3F029147A /* FitOnyWatchApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FitOnyWatchApp.swift; sourceTree = "<group>"; };
+		9158757DBA126F76664AD529 /* WatchWorkoutSessionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchWorkoutSessionManager.swift; sourceTree = "<group>"; };
+		923C7830815E6E80447D90CB /* LanguageState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageState.swift; sourceTree = "<group>"; };
+		97884A044E05BD51D7391025 /* BiometricVaultService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BiometricVaultService.swift; sourceTree = "<group>"; };
+		9F992D122CEF6A8ACE7114EC /* LanguageQuickSwitchButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageQuickSwitchButton.swift; sourceTree = "<group>"; };
+		A4D1DF01B2AF8B7736EDFEF3 /* FitOnyApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FitOnyApp.swift; sourceTree = "<group>"; };
+		A73813EC311ECD9FCD0DBE5E /* AnalyticsScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsScreen.swift; sourceTree = "<group>"; };
+		AE7BF11D1FCAB40EF70AC7CE /* WorkoutLiveActivityBundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutLiveActivityBundle.swift; sourceTree = "<group>"; };
+		BF9CC7EC79C13EBE94D97DFF /* PhoneWatchSyncService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneWatchSyncService.swift; sourceTree = "<group>"; };
+		C3AF7586F30BBE27D21A8A2B /* TodayScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayScreen.swift; sourceTree = "<group>"; };
+		D150FFF00C353A920BF6A157 /* WatchMorningCheckInScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchMorningCheckInScreen.swift; sourceTree = "<group>"; };
+		DD2EAEAD38E53E7F7357F41F /* WatchActiveSetScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchActiveSetScreen.swift; sourceTree = "<group>"; };
+		EA046ADBE1917EF3F542AF14 /* FitOny-iOS.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = "FitOny-iOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		EC6C55A0BCBC5BA145182282 /* FitOny-PhoneLiveActivity.appex */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = "wrapper.app-extension"; path = "FitOny-PhoneLiveActivity.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
+		F12F809EBF11ABFDBD444F72 /* WatchHomeScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchHomeScreen.swift; sourceTree = "<group>"; };
+		FED382811BE345EBD6E4BE1F /* AdvancedVaultScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdvancedVaultScreen.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		1AAE619F34103A7DAECD8C3E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2E775F18B78DD79550DEF750 /* FitOnyCore in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		45AB4EE42C3BDEACC7B59DFF /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4478828E06B356950FA9284B /* FitOnyCore in Frameworks */,
+				D5ECCA9062A3CA031AC178C9 /* FitOnyStorage in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C81ADB37EB3C4E76AED7B38E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				210F7C9BC543AC91835F8F34 /* FitOnyCore in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E729165C21D9922BF61F96E0 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7FCE6E89ACE9ACF9FA1880C0 /* FitOnyCore in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		11EC2CE74AC8E050B2DC3FDA /* Storage */ = {
+			isa = PBXGroup;
+			children = (
+				2907B62451BD78E8F4BA0C9B /* PersistenceController.swift */,
+			);
+			path = Storage;
+			sourceTree = "<group>";
+		};
+		16F59E32D39F6BBD662E22C9 /* Packages */ = {
+			isa = PBXGroup;
+			children = (
+				1EFAD1DA129FF7C1B433EBD1 /* FitOnyCore */,
+				0B2DB49F2CDB06F52E1593BE /* FitOnyStorage */,
+			);
+			path = Packages;
+			sourceTree = "<group>";
+		};
+		18342B291BC445E970386F95 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				97884A044E05BD51D7391025 /* BiometricVaultService.swift */,
+				31A03C94231C5F448CFBB5D1 /* HealthKitService.swift */,
+				BF9CC7EC79C13EBE94D97DFF /* PhoneWatchSyncService.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		1D11AE24854E4656BC8E4A77 /* Analytics */ = {
+			isa = PBXGroup;
+			children = (
+				A73813EC311ECD9FCD0DBE5E /* AnalyticsScreen.swift */,
+			);
+			path = Analytics;
+			sourceTree = "<group>";
+		};
+		20D32C77329FBEE385A5C1FB = {
+			isa = PBXGroup;
+			children = (
+				9BB79FABD0EF8467C1C3AF01 /* App-iOS */,
+				246B7974D4D3CFFB73DA6072 /* App-Watch */,
+				16F59E32D39F6BBD662E22C9 /* Packages */,
+				33F8A8AB3A0579442AB1E6B8 /* PhoneLiveActivity */,
+				717186911826AE0C87C90372 /* WatchComplications */,
+				6D8797FB2F414DC9915069CD /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		2341927D410069894B6BF163 /* Sensors */ = {
+			isa = PBXGroup;
+			children = (
+				9158757DBA126F76664AD529 /* WatchWorkoutSessionManager.swift */,
+				24D438E2D041CEA3236D41CF /* WristMotionService.swift */,
+			);
+			path = Sensors;
+			sourceTree = "<group>";
+		};
+		246B7974D4D3CFFB73DA6072 /* App-Watch */ = {
+			isa = PBXGroup;
+			children = (
+				477D4012963249420FFB6441 /* App */,
+				B78410DF5C1FE7266F1955D5 /* Resources */,
+				3C786250A8BBA9AB717F7BD9 /* Screens */,
+				2341927D410069894B6BF163 /* Sensors */,
+			);
+			path = "App-Watch";
+			sourceTree = "<group>";
+		};
+		25838B464F5EEAEBA6EF0204 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				A4D1DF01B2AF8B7736EDFEF3 /* FitOnyApp.swift */,
+				923C7830815E6E80447D90CB /* LanguageState.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		33F8A8AB3A0579442AB1E6B8 /* PhoneLiveActivity */ = {
+			isa = PBXGroup;
+			children = (
+				AE7BF11D1FCAB40EF70AC7CE /* WorkoutLiveActivityBundle.swift */,
+			);
+			name = PhoneLiveActivity;
+			path = Widgets/PhoneLiveActivity;
+			sourceTree = "<group>";
+		};
+		3C67A7B4BF855F208D160EF1 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				85220C7C2E1450E28D559B0D /* AppTheme.swift */,
+				89949BD67ADFCDD746EB4AFE /* SettingsScreen.swift */,
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
+		3C786250A8BBA9AB717F7BD9 /* Screens */ = {
+			isa = PBXGroup;
+			children = (
+				DD2EAEAD38E53E7F7357F41F /* WatchActiveSetScreen.swift */,
+				F12F809EBF11ABFDBD444F72 /* WatchHomeScreen.swift */,
+				D150FFF00C353A920BF6A157 /* WatchMorningCheckInScreen.swift */,
+			);
+			path = Screens;
+			sourceTree = "<group>";
+		};
+		408F904FBE4BA8234336590F /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				525F0B56EA7B8502280E425A /* Assets.xcassets */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		41E2F09C02F62607BF07AE2B /* Common */ = {
+			isa = PBXGroup;
+			children = (
+				9F992D122CEF6A8ACE7114EC /* LanguageQuickSwitchButton.swift */,
+			);
+			path = Common;
+			sourceTree = "<group>";
+		};
+		42EF3B9F03EDA7A1E57A5116 /* Programs */ = {
+			isa = PBXGroup;
+			children = (
+				6E0B31BACFB1CE72C8C1F3F3 /* ProgramsScreen.swift */,
+			);
+			path = Programs;
+			sourceTree = "<group>";
+		};
+		477D4012963249420FFB6441 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				8F2FA7AD065F81A3F029147A /* FitOnyWatchApp.swift */,
+				88D6A6B1693F2CC286AEF7DA /* WatchLanguageState.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		68D390A2576987A7BFB84B2F /* ActiveWorkout */ = {
+			isa = PBXGroup;
+			children = (
+				1F09C7389039C874668797A9 /* ActiveWorkoutScreen.swift */,
+			);
+			path = ActiveWorkout;
+			sourceTree = "<group>";
+		};
+		6D8797FB2F414DC9915069CD /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				EA046ADBE1917EF3F542AF14 /* FitOny-iOS.app */,
+				EC6C55A0BCBC5BA145182282 /* FitOny-PhoneLiveActivity.appex */,
+				5C0EAAE01E6DE39497451AEE /* FitOny-Watch.app */,
+				52E1E94854F93E96B9BFE058 /* FitOny-WatchComplications.appex */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		717186911826AE0C87C90372 /* WatchComplications */ = {
+			isa = PBXGroup;
+			children = (
+				166691E52D6D0046799970A8 /* ReadinessComplicationBundle.swift */,
+			);
+			name = WatchComplications;
+			path = Widgets/WatchComplications;
+			sourceTree = "<group>";
+		};
+		9BB79FABD0EF8467C1C3AF01 /* App-iOS */ = {
+			isa = PBXGroup;
+			children = (
+				25838B464F5EEAEBA6EF0204 /* App */,
+				408F904FBE4BA8234336590F /* Resources */,
+				E119C2BF8138B1468F08DCA3 /* Screens */,
+				18342B291BC445E970386F95 /* Services */,
+				11EC2CE74AC8E050B2DC3FDA /* Storage */,
+			);
+			path = "App-iOS";
+			sourceTree = "<group>";
+		};
+		9DDC31BDBE6800D99AFA74E4 /* AdvancedVault */ = {
+			isa = PBXGroup;
+			children = (
+				FED382811BE345EBD6E4BE1F /* AdvancedVaultScreen.swift */,
+			);
+			path = AdvancedVault;
+			sourceTree = "<group>";
+		};
+		B78410DF5C1FE7266F1955D5 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				63AC48FB2BD9E211AB138778 /* Assets.xcassets */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		E119C2BF8138B1468F08DCA3 /* Screens */ = {
+			isa = PBXGroup;
+			children = (
+				68D390A2576987A7BFB84B2F /* ActiveWorkout */,
+				9DDC31BDBE6800D99AFA74E4 /* AdvancedVault */,
+				1D11AE24854E4656BC8E4A77 /* Analytics */,
+				41E2F09C02F62607BF07AE2B /* Common */,
+				42EF3B9F03EDA7A1E57A5116 /* Programs */,
+				3C67A7B4BF855F208D160EF1 /* Settings */,
+				E59E5A898A35A198E051D350 /* Today */,
+			);
+			path = Screens;
+			sourceTree = "<group>";
+		};
+		E59E5A898A35A198E051D350 /* Today */ = {
+			isa = PBXGroup;
+			children = (
+				C3AF7586F30BBE27D21A8A2B /* TodayScreen.swift */,
+			);
+			path = Today;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		07DEA0D7A23020574E0EC222 /* FitOny-Watch */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 9B26BA435596B84C4B01F34D /* Build configuration list for PBXNativeTarget "FitOny-Watch" */;
+			buildPhases = (
+				E0AA17BC29C3FC5E2AB67A2D /* Sources */,
+				69237C53B0E4FB13004F24C2 /* Resources */,
+				E729165C21D9922BF61F96E0 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "FitOny-Watch";
+			packageProductDependencies = (
+				EC84B729A89E1F1C243455A1 /* FitOnyCore */,
+			);
+			productName = "FitOny-Watch";
+			productReference = 5C0EAAE01E6DE39497451AEE /* FitOny-Watch.app */;
+			productType = "com.apple.product-type.application";
+		};
+		800F1F635F8570FC4A1D8E29 /* FitOny-WatchComplications */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C75264262F2B95CC36148B0C /* Build configuration list for PBXNativeTarget "FitOny-WatchComplications" */;
+			buildPhases = (
+				A9B649A2CAC2F91504171DC0 /* Sources */,
+				1AAE619F34103A7DAECD8C3E /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "FitOny-WatchComplications";
+			packageProductDependencies = (
+				8919EC188C17306CFA8DA27C /* FitOnyCore */,
+			);
+			productName = "FitOny-WatchComplications";
+			productReference = 52E1E94854F93E96B9BFE058 /* FitOny-WatchComplications.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+		A8589F443F72A3A6CF49417D /* FitOny-iOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = AF76C630ED7EDCC0E3FD77F2 /* Build configuration list for PBXNativeTarget "FitOny-iOS" */;
+			buildPhases = (
+				4340313BE69D98813CABF0F7 /* Sources */,
+				0084762E2A41C6696BF78F26 /* Resources */,
+				45AB4EE42C3BDEACC7B59DFF /* Frameworks */,
+				45324C91D9C6D454934E031C /* Embed Watch Content */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				6214E61ACBF90AC9E090C0F1 /* PBXTargetDependency */,
+			);
+			name = "FitOny-iOS";
+			packageProductDependencies = (
+				26D5156EFEBFB2F16A4C031B /* FitOnyCore */,
+				F84E643ABDE147D70ADBB662 /* FitOnyStorage */,
+			);
+			productName = "FitOny-iOS";
+			productReference = EA046ADBE1917EF3F542AF14 /* FitOny-iOS.app */;
+			productType = "com.apple.product-type.application";
+		};
+		E47D4015DD66CD7E567FF95C /* FitOny-PhoneLiveActivity */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 481918F0B96DB6A82F7007D1 /* Build configuration list for PBXNativeTarget "FitOny-PhoneLiveActivity" */;
+			buildPhases = (
+				1830D75B7A338EC6A7CEB51B /* Sources */,
+				C81ADB37EB3C4E76AED7B38E /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "FitOny-PhoneLiveActivity";
+			packageProductDependencies = (
+				938EBAC8258E735F6A79747C /* FitOnyCore */,
+			);
+			productName = "FitOny-PhoneLiveActivity";
+			productReference = EC6C55A0BCBC5BA145182282 /* FitOny-PhoneLiveActivity.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		97EBBDCEFBB831AF021EC6A3 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1600;
+				TargetAttributes = {
+				};
+			};
+			buildConfigurationList = AA6F7508D39910E35CFF9C63 /* Build configuration list for PBXProject "FitOny" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = 20D32C77329FBEE385A5C1FB;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				4784DC3389931DC9CF6890D1 /* XCLocalSwiftPackageReference "Packages/FitOnyCore" */,
+				D4D1F27BF23F8B9CD30EFAF0 /* XCLocalSwiftPackageReference "Packages/FitOnyStorage" */,
+			);
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 6D8797FB2F414DC9915069CD /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				A8589F443F72A3A6CF49417D /* FitOny-iOS */,
+				07DEA0D7A23020574E0EC222 /* FitOny-Watch */,
+				E47D4015DD66CD7E567FF95C /* FitOny-PhoneLiveActivity */,
+				800F1F635F8570FC4A1D8E29 /* FitOny-WatchComplications */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		0084762E2A41C6696BF78F26 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				601FC0B72F21EAEA7646B14B /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		69237C53B0E4FB13004F24C2 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9FB35312FFAF3645D34F41FE /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		1830D75B7A338EC6A7CEB51B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B091908B7CEBFDA03CB6BA8B /* WorkoutLiveActivityBundle.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4340313BE69D98813CABF0F7 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				828C57F9CB4A50358D264AD9 /* ActiveWorkoutScreen.swift in Sources */,
+				2083726219BA4B885CA4E023 /* AdvancedVaultScreen.swift in Sources */,
+				2AF044FAD88F9D3F2FDFADD7 /* AnalyticsScreen.swift in Sources */,
+				466254DFFEC766C3778F5A55 /* AppTheme.swift in Sources */,
+				0992A908FD2E063A33F160C7 /* BiometricVaultService.swift in Sources */,
+				7EC4C5538ED7063C6B2958ED /* FitOnyApp.swift in Sources */,
+				2D65A6B734F56A31DDDAF104 /* HealthKitService.swift in Sources */,
+				701A2052229A4AE82F6B33DF /* LanguageQuickSwitchButton.swift in Sources */,
+				FD211D5F40C4479EF15B5D41 /* LanguageState.swift in Sources */,
+				2B47C1481C62197DE6883C2C /* PersistenceController.swift in Sources */,
+				5939E72194EB1A46D8EE573F /* PhoneWatchSyncService.swift in Sources */,
+				19FC3AFF16C8F0174EE709F2 /* ProgramsScreen.swift in Sources */,
+				19AD2ADD8C1ADD854D09BC60 /* SettingsScreen.swift in Sources */,
+				EC6C451ED2E1997C725862D0 /* TodayScreen.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A9B649A2CAC2F91504171DC0 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2196466B6522E84F2D947ABD /* ReadinessComplicationBundle.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E0AA17BC29C3FC5E2AB67A2D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1808AD1FDDD74D8EC1974A67 /* FitOnyWatchApp.swift in Sources */,
+				09983C0113FF0F32577C9F15 /* WatchActiveSetScreen.swift in Sources */,
+				EE983DA5E142E33E18A3378F /* WatchHomeScreen.swift in Sources */,
+				D8ACA36D83CC5B67A56C9D50 /* WatchLanguageState.swift in Sources */,
+				A11256535B8AE4586E7274C2 /* WatchMorningCheckInScreen.swift in Sources */,
+				B9CBF691D68CDB73A278C047 /* WatchWorkoutSessionManager.swift in Sources */,
+				2F326AF6DC5C30B117A9E1CA /* WristMotionService.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		6214E61ACBF90AC9E090C0F1 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 07DEA0D7A23020574E0EC222 /* FitOny-Watch */;
+			targetProxy = F49C2F2E97566AF82D8CC565 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		0220485D9067748006AF975B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.deusflow.fitony.ios.watchkitapp.widgets;
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = 4;
+			};
+			name = Release;
+		};
+		158073B7290ADF30B57A0089 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = "App-iOS/FitOny-iOS.entitlements";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				INFOPLIST_FILE = "App-iOS/App/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.deusflow.fitony.ios;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		1B2230B01484CCCF04048534 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.deusflow.fitony.ios.watchkitapp.widgets;
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = 4;
+			};
+			name = Debug;
+		};
+		24D94150924464295B52C275 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = "App-iOS/FitOny-iOS.entitlements";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				INFOPLIST_FILE = "App-iOS/App/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.deusflow.fitony.ios;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		3E799A540D601DF4DC8DAF0E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.deusflow.fitony.ios.liveactivity;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		5894458F1033F0361844B849 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = "App-Watch/FitOny-Watch.entitlements";
+				INFOPLIST_FILE = "App-Watch/App/Info.plist";
+				PRODUCT_BUNDLE_IDENTIFIER = com.deusflow.fitony.ios.watchkitapp;
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = 4;
+			};
+			name = Release;
+		};
+		8A95D697CA9DF63647D97508 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.deusflow.fitony.ios.liveactivity;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		EDF1582EA7F3B602E93A144D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_STRICT_CONCURRENCY = complete;
+				SWIFT_VERSION = 6.0;
+				WATCHOS_DEPLOYMENT_TARGET = 11.0;
+			};
+			name = Debug;
+		};
+		EFF6D1AAC183CD37EB768239 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = "App-Watch/FitOny-Watch.entitlements";
+				INFOPLIST_FILE = "App-Watch/App/Info.plist";
+				PRODUCT_BUNDLE_IDENTIFIER = com.deusflow.fitony.ios.watchkitapp;
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = 4;
+			};
+			name = Debug;
+		};
+		F4D1B2FBFE78CC219D4220D2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_STRICT_CONCURRENCY = complete;
+				SWIFT_VERSION = 6.0;
+				WATCHOS_DEPLOYMENT_TARGET = 11.0;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		481918F0B96DB6A82F7007D1 /* Build configuration list for PBXNativeTarget "FitOny-PhoneLiveActivity" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8A95D697CA9DF63647D97508 /* Debug */,
+				3E799A540D601DF4DC8DAF0E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		9B26BA435596B84C4B01F34D /* Build configuration list for PBXNativeTarget "FitOny-Watch" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				EFF6D1AAC183CD37EB768239 /* Debug */,
+				5894458F1033F0361844B849 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		AA6F7508D39910E35CFF9C63 /* Build configuration list for PBXProject "FitOny" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				EDF1582EA7F3B602E93A144D /* Debug */,
+				F4D1B2FBFE78CC219D4220D2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		AF76C630ED7EDCC0E3FD77F2 /* Build configuration list for PBXNativeTarget "FitOny-iOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				158073B7290ADF30B57A0089 /* Debug */,
+				24D94150924464295B52C275 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		C75264262F2B95CC36148B0C /* Build configuration list for PBXNativeTarget "FitOny-WatchComplications" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1B2230B01484CCCF04048534 /* Debug */,
+				0220485D9067748006AF975B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		4784DC3389931DC9CF6890D1 /* XCLocalSwiftPackageReference "Packages/FitOnyCore" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Packages/FitOnyCore;
+		};
+		D4D1F27BF23F8B9CD30EFAF0 /* XCLocalSwiftPackageReference "Packages/FitOnyStorage" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Packages/FitOnyStorage;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		26D5156EFEBFB2F16A4C031B /* FitOnyCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = FitOnyCore;
+		};
+		8919EC188C17306CFA8DA27C /* FitOnyCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = FitOnyCore;
+		};
+		938EBAC8258E735F6A79747C /* FitOnyCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = FitOnyCore;
+		};
+		EC84B729A89E1F1C243455A1 /* FitOnyCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = FitOnyCore;
+		};
+		F84E643ABDE147D70ADBB662 /* FitOnyStorage */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = FitOnyStorage;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = 97EBBDCEFBB831AF021EC6A3 /* Project object */;
+}
