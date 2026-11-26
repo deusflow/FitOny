@@ -183,6 +183,88 @@ struct FitOnyCoreVerify {
         precondition(volReport.summariesByMuscle[.chest]?.effectiveWeeklySets == 5.0)
         precondition(volReport.summariesByMuscle[.biceps]?.effectiveWeeklySets == 4.0)
 
-        print("FitOnyCoreVerify OK: «\(program.name.resolved(for: .da)) / \(program.name.resolved(for: .ru))» проверена; 6-нед. мезоцикл, обратная пирамида, VolumeCalculator (14 мышц) и RecoveryWindowTracker (48ч + замены A–E) работают без ошибок.")
+        // День 5: ReadinessEngine (28-дн. бейзлайн, без часов ночью, детектор ОРВИ, внеплановый Deload) + RepMotionAnalyzer
+        let readinessBaseDate = Date(timeIntervalSince1970: 1_800_000_000)
+        let goodHistory = (1...14).map { offset in
+            NightBiometrics(
+                date: readinessBaseDate.addingTimeInterval(Double(-offset) * 86400),
+                nocturnalHRVms: 72.0,
+                restingHeartRateBPM: 52.0,
+                sleepDurationMinutes: 460,
+                deepAndREMMinutes: 170,
+                wristTemperatureCelsius: 36.4,
+                respiratoryRateBrPM: 14.5
+            )
+        }
+        let peakSnap = ReadinessEngine.evaluate(
+            today: NightBiometrics(
+                date: readinessBaseDate,
+                nocturnalHRVms: 88.0,
+                restingHeartRateBPM: 49.0,
+                sleepDurationMinutes: 490,
+                deepAndREMMinutes: 190,
+                wristTemperatureCelsius: 36.4,
+                respiratoryRateBrPM: 14.4
+            ),
+            historyLast28Days: goodHistory,
+            checkIn: MorningCheckIn(energyRating: 5, sorenessRating: 1, stressRating: 1, recordedAt: readinessBaseDate)
+        )
+        precondition(peakSnap.score >= 85 && peakSnap.zone == .peak && !peakSnap.isSuspectedIllness)
+
+        let noWatchSnap = ReadinessEngine.evaluate(
+            today: NightBiometrics(date: readinessBaseDate),
+            historyLast28Days: goodHistory,
+            checkIn: MorningCheckIn(energyRating: 3, sorenessRating: 3, stressRating: 3, recordedAt: readinessBaseDate)
+        )
+        precondition(!noWatchSnap.hasCompleteNightSensors && noWatchSnap.score == 50)
+
+        let illnessSnap = ReadinessEngine.evaluate(
+            today: NightBiometrics(
+                date: readinessBaseDate,
+                nocturnalHRVms: 40.0,
+                restingHeartRateBPM: 63.0,
+                sleepDurationMinutes: 390,
+                wristTemperatureCelsius: 37.2,
+                respiratoryRateBrPM: 17.4
+            ),
+            historyLast28Days: goodHistory
+        )
+        precondition(illnessSnap.isSuspectedIllness && illnessSnap.score <= 35)
+
+        // Синтез подхода сгибаний рук на 8 повторов с замедлением к 8-му повтору
+        var curlSamples: [IMUSample] = []
+        let dt = 0.02
+        var t = 0.0
+        while t < 1.4 {
+            curlSamples.append(IMUSample(timestamp: t, verticalUserAccelerationG: t < 0.4 ? 0.3 : 0.0))
+            t += dt
+        }
+        for concDuration in [0.8, 0.8, 0.85, 0.9, 1.0, 1.15, 1.4, 1.65] {
+            for step in 0..<100 {
+                let phase = Double(step) / 100.0
+                curlSamples.append(IMUSample(timestamp: t, verticalUserAccelerationG: -0.14 * sin(phase * .pi)))
+                t += dt
+            }
+            for _ in 0..<25 {
+                curlSamples.append(IMUSample(timestamp: t, verticalUserAccelerationG: 0.0))
+                t += dt
+            }
+            let concSteps = Int(concDuration / dt)
+            for step in 0..<concSteps {
+                let phase = Double(step) / Double(concSteps)
+                curlSamples.append(IMUSample(timestamp: t, verticalUserAccelerationG: 0.32 * sin(phase * .pi)))
+                t += dt
+            }
+            for _ in 0..<30 {
+                curlSamples.append(IMUSample(timestamp: t, verticalUserAccelerationG: -0.04))
+                t += dt
+            }
+        }
+        let motionSuggestion = RepMotionAnalyzer.analyze(samples: curlSamples, motionProfile: .arcWristPath)
+        precondition(motionSuggestion?.detectedReps == 8)
+        precondition((motionSuggestion?.concentricSlowdownPercent ?? 0) >= 45.0)
+        precondition(RepMotionAnalyzer.analyze(samples: curlSamples, motionProfile: .stationaryWrist) == nil)
+
+        print("FitOnyCoreVerify OK: ВСЁ ЯДРО (Дни 1–5) проверено — «Pumpet Pony», прогрессия, авторегуляция, 6-нед. цикл, 48ч/14 мышц, Readiness (\(peakSnap.score)/\(illnessSnap.score)) и IMU (\(motionSuggestion!.detectedReps) повт., +\(motionSuggestion!.concentricSlowdownPercent)% замедл.).")
     }
 }
