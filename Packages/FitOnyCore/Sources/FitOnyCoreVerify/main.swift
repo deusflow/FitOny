@@ -183,6 +183,222 @@ struct FitOnyCoreVerify {
         precondition(volReport.summariesByMuscle[.chest]?.effectiveWeeklySets == 5.0)
         precondition(volReport.summariesByMuscle[.biceps]?.effectiveWeeklySets == 4.0)
 
-        print("FitOnyCoreVerify OK: «\(program.name.resolved(for: .da)) / \(program.name.resolved(for: .ru))» проверена; 6-нед. мезоцикл, обратная пирамида, VolumeCalculator (14 мышц) и RecoveryWindowTracker (48ч + замены A–E) работают без ошибок.")
+        // День 5: ReadinessEngine (28-дн. бейзлайн, без часов ночью, детектор ОРВИ, внеплановый Deload) + RepMotionAnalyzer
+        let readinessBaseDate = Date(timeIntervalSince1970: 1_800_000_000)
+        let goodHistory = (1...14).map { offset in
+            NightBiometrics(
+                date: readinessBaseDate.addingTimeInterval(Double(-offset) * 86400),
+                nocturnalHRVms: 72.0,
+                restingHeartRateBPM: 52.0,
+                sleepDurationMinutes: 460,
+                deepAndREMMinutes: 170,
+                wristTemperatureCelsius: 36.4,
+                respiratoryRateBrPM: 14.5
+            )
+        }
+        let peakSnap = ReadinessEngine.evaluate(
+            today: NightBiometrics(
+                date: readinessBaseDate,
+                nocturnalHRVms: 88.0,
+                restingHeartRateBPM: 49.0,
+                sleepDurationMinutes: 490,
+                deepAndREMMinutes: 190,
+                wristTemperatureCelsius: 36.4,
+                respiratoryRateBrPM: 14.4
+            ),
+            historyLast28Days: goodHistory,
+            checkIn: MorningCheckIn(energyRating: 5, sorenessRating: 1, stressRating: 1, recordedAt: readinessBaseDate)
+        )
+        precondition(peakSnap.score >= 85 && peakSnap.zone == .peak && !peakSnap.isSuspectedIllness)
+
+        let noWatchSnap = ReadinessEngine.evaluate(
+            today: NightBiometrics(date: readinessBaseDate),
+            historyLast28Days: goodHistory,
+            checkIn: MorningCheckIn(energyRating: 3, sorenessRating: 3, stressRating: 3, recordedAt: readinessBaseDate)
+        )
+        precondition(!noWatchSnap.hasCompleteNightSensors && noWatchSnap.score == 50)
+
+        let illnessSnap = ReadinessEngine.evaluate(
+            today: NightBiometrics(
+                date: readinessBaseDate,
+                nocturnalHRVms: 40.0,
+                restingHeartRateBPM: 63.0,
+                sleepDurationMinutes: 390,
+                wristTemperatureCelsius: 37.2,
+                respiratoryRateBrPM: 17.4
+            ),
+            historyLast28Days: goodHistory
+        )
+        precondition(illnessSnap.isSuspectedIllness && illnessSnap.score <= 35)
+
+        // Синтез подхода сгибаний рук на 8 повторов с замедлением к 8-му повтору
+        var curlSamples: [IMUSample] = []
+        let dt = 0.02
+        var t = 0.0
+        while t < 1.4 {
+            curlSamples.append(IMUSample(timestamp: t, verticalUserAccelerationG: t < 0.4 ? 0.3 : 0.0))
+            t += dt
+        }
+        for concDuration in [0.8, 0.8, 0.85, 0.9, 1.0, 1.15, 1.4, 1.65] {
+            for step in 0..<100 {
+                let phase = Double(step) / 100.0
+                curlSamples.append(IMUSample(timestamp: t, verticalUserAccelerationG: -0.14 * sin(phase * .pi)))
+                t += dt
+            }
+            for _ in 0..<25 {
+                curlSamples.append(IMUSample(timestamp: t, verticalUserAccelerationG: 0.0))
+                t += dt
+            }
+            let concSteps = Int(concDuration / dt)
+            for step in 0..<concSteps {
+                let phase = Double(step) / Double(concSteps)
+                curlSamples.append(IMUSample(timestamp: t, verticalUserAccelerationG: 0.32 * sin(phase * .pi)))
+                t += dt
+            }
+            for _ in 0..<30 {
+                curlSamples.append(IMUSample(timestamp: t, verticalUserAccelerationG: -0.04))
+                t += dt
+            }
+        }
+        let motionSuggestion = RepMotionAnalyzer.analyze(samples: curlSamples, motionProfile: .arcWristPath)
+        precondition(motionSuggestion?.detectedReps == 8)
+        precondition((motionSuggestion?.concentricSlowdownPercent ?? 0) >= 45.0)
+        precondition(RepMotionAnalyzer.analyze(samples: curlSamples, motionProfile: .stationaryWrist) == nil)
+
+        // Финальный аудит Ядра: защита пустого грифа в одиночной разминке, пульсовой советник HRR и JSON round-trip
+        let emptyBarWarmup = WarmupGenerator.generate(
+            firstWorkingWeightKg: 20,
+            equipment: .barbell(barWeightKg: 20, stepKg: 2.5),
+            prescription: .single12()
+        )
+        precondition(emptyBarWarmup.isEmpty, "Для пустого грифа 20 кг одиночная разминка не должна выдавать 20 кг поверх рабочего веса")
+
+        let hrrCompound = HeartRateRecoveryEngine.evaluateAtEndOfRest(
+            currentHeartRateBPM: 138,
+            peakSetHeartRateBPM: 166,
+            heartRateAt60sRestBPM: 134,
+            restingHeartRateBPM: 55,
+            estimatedMaxHeartRateBPM: 190,
+            isCompoundExercise: true
+        )
+        precondition(hrrCompound.hrr60DropBPM == 32 && hrrCompound.shouldSuggestExtraRest && hrrCompound.suggestedExtraSeconds == 30)
+
+        let hrrIsolation = HeartRateRecoveryEngine.evaluateAtEndOfRest(
+            currentHeartRateBPM: 138,
+            restingHeartRateBPM: 55,
+            estimatedMaxHeartRateBPM: 190,
+            isCompoundExercise: false
+        )
+        precondition(!hrrIsolation.shouldSuggestExtraRest)
+
+        let encoder = JSONEncoder()
+        let decoder = JSONDecoder()
+
+        let decodedProgram = try! decoder.decode(ProgramTemplate.self, from: try! encoder.encode(PumpetPonyCatalog.programTemplate))
+        precondition(decodedProgram == PumpetPonyCatalog.programTemplate, "Ошибка JSON round-trip шаблона программы")
+
+        let decodedWeekPlan = try! decoder.decode(PrescribedWeekModule.self, from: try! encoder.encode(dWeek3))
+        precondition(decodedWeekPlan == dWeek3, "Ошибка JSON round-trip недельного плана")
+
+        let syncSample = WatchSyncEnvelope(payload: .setCompleted(sessionID: UUID(), set: pyramidCompleted[0]))
+        let decodedSync = try! decoder.decode(WatchSyncEnvelope.self, from: try! encoder.encode(syncSample))
+        precondition(decodedSync == syncSample, "Ошибка JSON round-trip конверта синхронизации")
+
+        // Проверка закрытия всех 7 архитектурных стыков:
+        // 1) сохранение второго упражнения суперсета в Модуле E №4
+        let ePrescribed = PeriodizationEngine.prescribeModule(PumpetPonyCatalog.moduleE, weekNumber: 2)
+        precondition(ePrescribed.slots.last?.pairedExerciseID == PumpetPonyCatalog.ExerciseIDs.reversePecDeck)
+
+        // 2) независимый учёт весов тренажёра (90 кг) и гантелей (32 кг за 1 гантель -> 34 кг)
+        let flatEx = PumpetPonyCatalog.ExerciseIDs.horizontalChestPress
+        let dbSets = (0..<4).map { idx in
+            CompletedSetRecord(
+                sessionID: UUID(),
+                exerciseID: flatEx,
+                equipmentVariant: .alternative,
+                setIndex: idx,
+                isWarmup: false,
+                weightKg: 32,
+                completedReps: 10,
+                rir: 1
+            )
+        }
+        let dbProg = ProgressionEngine.evaluateNextSession(
+            currentLoad: ExerciseLoadState(exerciseID: flatEx, equipmentVariant: .alternative, baselineWorkingWeightKg: 32),
+            completedWorkingSets: dbSets,
+            scheme: .straightSets(count: 4, reps: RepRange(min: 8, max: 10)),
+            targetRIR: 1,
+            equipment: .dumbbellRack()
+        )
+        let machineProg = ProgressionEngine.evaluateNextSession(
+            currentLoad: ExerciseLoadState(exerciseID: flatEx, equipmentVariant: .primary, baselineWorkingWeightKg: 90),
+            completedWorkingSets: dbSets,
+            scheme: .straightSets(count: 4, reps: RepRange(min: 8, max: 10)),
+            targetRIR: 1,
+            equipment: .machine(stepKg: 2.5)
+        )
+        precondition(dbProg.didProgressWeight && dbProg.nextBaselineWeightKg == 34.0)
+        precondition(!machineProg.didProgressWeight && machineProg.nextBaselineWeightKg == 90.0)
+        precondition(EquipmentProfile.dumbbellRack().loadEntryHint.ru == "за 1 гантель")
+        precondition(EquipmentProfile.plateLoadedMachine().loadEntryHint.ru == "общий вес блинов")
+
+        // 3) SessionComposer: замена бицепса на махи в Модуле B во время недели Deload режет заменённое упражнение вдвое (4 -> 2 сета, RIR 3)
+        let deloadComposedB = SessionComposer.compose(
+            module: PumpetPonyCatalog.moduleB,
+            program: program,
+            weekNumber: 6,
+            totalWeeks: 6,
+            phase: .hypertrophy,
+            recentSets: yesterdayArmSets,
+            referenceDate: now
+        )
+        precondition(deloadComposedB.weekRole == .deload)
+        precondition(deloadComposedB.exercises.last?.exerciseID == PumpetPonyCatalog.ExerciseIDs.seatedDumbbellLateralRaise)
+        precondition(deloadComposedB.exercises.last?.workingSetRepRanges.count == 2 && deloadComposedB.exercises.last?.targetRIR == 3)
+
+        // 4) Гибкая очередь модулей без привязки к дням недели (A -> B -> D -> C -> A) и кастомные программы в ProgramCatalog
+        precondition(program.nextModuleInQueue(afterCompletedModuleCode: "A")?.code == "B")
+        precondition(program.nextModuleInQueue(afterCompletedModuleCode: "B")?.code == "D")
+        precondition(program.nextModuleInQueue(afterCompletedModuleCode: "D")?.code == "C")
+        precondition(program.nextModuleInQueue(afterCompletedModuleCode: "C")?.code == "A")
+
+        var customCatalog = ProgramCatalog.builtIn
+        let customEx = ExerciseDefinition(
+            code: "CUSTOM_DIP",
+            name: BilingualText(da: "Dips med vægt", ru: "Брусья с весом"),
+            isCompound: true,
+            equipment: .bodyweight(addedWeightStepKg: 2.5),
+            motionProfile: .verticalBarPath,
+            muscleContributions: [.chest: 1.0, .triceps: 0.75],
+            defaultRestSeconds: 150
+        )
+        customCatalog.upsertExercise(customEx)
+        let customProg = ProgramTemplate(
+            slug: "my-custom-upper",
+            name: .custom("My Custom Split"),
+            isCustom: true,
+            recommendedDaysPerWeek: 3,
+            modules: [
+                WorkoutModuleBlueprint(
+                    code: "U1",
+                    title: .custom("Upper 1"),
+                    slots: [ModuleExerciseSlot(exerciseID: customEx.id, scheme: .straightSets(count: 3, reps: RepRange(min: 6, max: 8)), targetRIR: 1, minRestSeconds: 150)]
+                )
+            ]
+        )
+        customCatalog.upsertProgram(customProg)
+        precondition(customCatalog.programs.count == 2 && customCatalog.exercisesByID[customEx.id] != nil)
+
+        // 5) Живая телеметрия тренировки на часах (время, ЧСС, ккал) в конверте синхронизации
+        let telemetryEnv = WatchSyncEnvelope(
+            payload: .liveWorkoutTelemetryUpdated(
+                sessionID: UUID(),
+                telemetry: LiveWorkoutTelemetry(elapsedSeconds: 2540, currentHeartRateBPM: 142, activeKilocalories: 318, totalKilocalories: 395)
+            )
+        )
+        let decodedTelemetry = try! decoder.decode(WatchSyncEnvelope.self, from: try! encoder.encode(telemetryEnv))
+        precondition(decodedTelemetry == telemetryEnv)
+
+        print("FitOnyCoreVerify OK: ВСЁ ЯДРО + АРХИТЕКТУРНЫЙ АУДИТ пройдены — SessionComposer, раздельные веса снарядов, суперсеты, полуночные сессии, кастомные программы и живая телеметрия часов проверены.")
     }
 }

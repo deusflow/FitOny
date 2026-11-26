@@ -44,6 +44,15 @@ public struct ExerciseDefinition: Codable, Sendable, Equatable, Identifiable {
     public var defaultRestSeconds: Int
     public var setupNote: SetupNote
 
+    public func equipment(for variant: EquipmentVariant) -> EquipmentProfile {
+        switch variant {
+        case .primary:
+            return equipment
+        case .alternative:
+            return alternativeEquipment ?? equipment
+        }
+    }
+
     public init(
         id: UUID = UUID(),
         code: String,
