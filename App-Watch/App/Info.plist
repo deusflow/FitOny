@@ -11,26 +11,26 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>FitOny Watch</string>
+	<string>$(PRODUCT_NAME)</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>0.1.0</string>
+	<string>1.0</string>
 	<key>CFBundleVersion</key>
 	<string>1</string>
+	<key>NSHealthShareUsageDescription</key>
+	<string>Часы отслеживают пульс во время подхода и пауз отдыха.</string>
+	<key>NSHealthUpdateUsageDescription</key>
+	<string>Часы записывают силовую тренировку и расход энергии в Здоровье.</string>
+	<key>NSMotionUsageDescription</key>
+	<string>Датчики движения используются для подсчёта повторений и оценки замедления в конце подхода.</string>
 	<key>WKApplication</key>
 	<true/>
-	<key>WKCompanionAppBundleIdentifier</key>
-	<string>com.deusflow.fitony.ios</string>
-	<key>NSHealthShareUsageDescription</key>
-	<string>Часы отслеживают пульс во время подхода и отдыха.</string>
-	<key>NSHealthUpdateUsageDescription</key>
-	<string>Часы сохраняют силовую тренировку в Здоровье.</string>
-	<key>NSMotionUsageDescription</key>
-	<string>Акселерометр и гироскоп оценивают число повторений и замедление движения.</string>
 	<key>WKBackgroundModes</key>
 	<array>
 		<string>workout-processing</string>
 	</array>
+	<key>WKCompanionAppBundleIdentifier</key>
+	<string>com.deusflow.fitony.ios</string>
 </dict>
 </plist>
