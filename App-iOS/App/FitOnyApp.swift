@@ -4,10 +4,13 @@ import FitOnyCore
 
 @main
 struct FitOnyApp: App {
+    @Environment(\.scenePhase) private var scenePhase
+
     private let persistence = PersistenceController.shared
 
     @State private var selectedTheme: AppTheme
     @State private var languageState = LanguageState()
+    @State private var vaultService = BiometricVaultService()
 
     init() {
         let initialTheme = PersistenceController.shared.loadInitialTheme()
@@ -18,6 +21,7 @@ struct FitOnyApp: App {
         WindowGroup {
             RootTabContainerView(theme: $selectedTheme)
                 .environment(languageState)
+                .environment(vaultService)
                 .environment(\.locale, Locale(identifier: languageState.effectiveLanguage.localeIdentifier))
                 .onChange(of: selectedTheme) { _, newValue in
                     persistence.saveSelectedTheme(newValue)
@@ -33,6 +37,11 @@ struct FitOnyApp: App {
                         primary: languageState.primaryLanguage,
                         showRussianHint: newValue
                     )
+                }
+                .onChange(of: scenePhase) { _, newPhase in
+                    if newPhase != .active {
+                        vaultService.lockImmediately()
+                    }
                 }
         }
         .modelContainer(persistence.container)
