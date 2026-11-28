@@ -11,6 +11,7 @@ struct FitOnyApp: App {
     @State private var selectedTheme: AppTheme
     @State private var languageState = LanguageState()
     @State private var vaultService = BiometricVaultService()
+    @State private var healthService = HealthKitService()
 
     init() {
         let initialTheme = PersistenceController.shared.loadInitialTheme()
@@ -22,6 +23,7 @@ struct FitOnyApp: App {
             RootTabContainerView(theme: $selectedTheme)
                 .environment(languageState)
                 .environment(vaultService)
+                .environment(healthService)
                 .environment(\.locale, Locale(identifier: languageState.effectiveLanguage.localeIdentifier))
                 .onChange(of: selectedTheme) { _, newValue in
                     persistence.saveSelectedTheme(newValue)
